@@ -2,46 +2,46 @@
 description: Enforce TDD workflow for C++. Write GoogleTest tests first, then implement. Verify coverage with gcov/lcov.
 ---
 
-# C++ TDD Command
+# C++ TDD 命令
 
-This command enforces test-driven development methodology for C++ code using GoogleTest/GoogleMock with CMake/CTest.
+此命令使用 GoogleTest/GoogleMock 和 CMake/CTest 对 C++ 代码强制执行测试驱动开发方法论。
 
-## What This Command Does
+## 此命令的作用
 
-1. **Define Interfaces**: Scaffold class/function signatures first
-2. **Write Tests**: Create comprehensive GoogleTest test cases (RED)
-3. **Run Tests**: Verify tests fail for the right reason
-4. **Implement Code**: Write minimal code to pass (GREEN)
-5. **Refactor**: Improve while keeping tests green
-6. **Check Coverage**: Ensure 80%+ coverage
+1. **定义接口**：首先搭建类/函数签名
+2. **编写测试**：创建全面的 GoogleTest 测试用例（红色）
+3. **运行测试**：验证测试因正确的原因失败
+4. **实现代码**：编写最少的代码通过（绿色）
+5. **重构**：在保持测试绿色的情况下改进
+6. **检查覆盖率**：确保 80% 以上的覆盖率
 
-## When to Use
+## 使用场景
 
-Use `/cpp-test` when:
-- Implementing new C++ functions or classes
-- Adding test coverage to existing code
-- Fixing bugs (write failing test first)
-- Building critical business logic
-- Learning TDD workflow in C++
+在以下情况下使用 `/cpp-test`：
+- 实现新的 C++ 函数或类
+- 为现有代码添加测试覆盖率
+- 修复 bug（首先编写失败的测试）
+- 构建关键业务逻辑
+- 学习 C++ 中的 TDD 工作流
 
-## TDD Cycle
+## TDD 循环
 
 ```
-RED     → Write failing GoogleTest test
-GREEN   → Implement minimal code to pass
-REFACTOR → Improve code, tests stay green
-REPEAT  → Next test case
+红色     → 编写失败的 GoogleTest 测试
+绿色   → 实现最少的代码通过
+重构 → 改进代码，测试保持绿色
+重复  → 下一个测试用例
 ```
 
-## Example Session
+## 示例会话
 
 ````
-User: /cpp-test I need a function to validate email addresses
+用户：/cpp-test 我需要一个函数来验证电子邮件地址
 
-Agent:
-# TDD Session: Email Validator
+代理：
+# TDD 会话：电子邮件验证器
 
-## Step 1: Define Interface
+## 第一步：定义接口
 
 ```cpp
 // validator/email.hpp
@@ -57,7 +57,7 @@ enum class EmailError {
 std::expected<void, EmailError> validate_email(const std::string& email);
 ```
 
-## Step 2: Write Tests (RED)
+## 第二步：编写测试（红色）
 
 ```cpp
 // validator/email_test.cpp
@@ -96,7 +96,7 @@ TEST(ValidateEmail, RejectsNoLocalPart) {
 }
 ```
 
-## Step 3: Run Tests - Verify FAIL
+## 第三步：运行测试 - 验证失败
 
 ```bash
 $ cmake --build build && ctest --test-dir build --output-on-failure
@@ -107,9 +107,9 @@ $ cmake --build build && ctest --test-dir build --output-on-failure
 FAIL
 ```
 
-✓ Tests fail as expected (unimplemented).
+✓ 测试按预期失败（未实现）。
 
-## Step 4: Implement Minimal Code (GREEN)
+## 第四步：实现最少的代码（绿色）
 
 ```cpp
 // validator/email.cpp
@@ -128,7 +128,7 @@ std::expected<void, EmailError> validate_email(const std::string& email) {
 }
 ```
 
-## Step 5: Run Tests - Verify PASS
+## 第五步：运行测试 - 验证通过
 
 ```bash
 $ cmake --build build && ctest --test-dir build --output-on-failure
@@ -138,9 +138,9 @@ $ cmake --build build && ctest --test-dir build --output-on-failure
 100% tests passed.
 ```
 
-✓ All tests passing!
+✓ 所有测试通过！
 
-## Step 6: Check Coverage
+## 第六步：检查覆盖率
 
 ```bash
 $ cmake -DCMAKE_CXX_FLAGS="--coverage" -B build && cmake --build build
@@ -151,14 +151,14 @@ $ lcov --list coverage.info
 validator/email.cpp     | 100%
 ```
 
-✓ Coverage: 100%
+✓ 覆盖率：100%
 
-## TDD Complete!
+## TDD 完成！
 ````
 
-## Test Patterns
+## 测试模式
 
-### Basic Tests
+### 基本测试
 ```cpp
 TEST(SuiteName, TestName) {
     EXPECT_EQ(add(2, 3), 5);
@@ -168,7 +168,7 @@ TEST(SuiteName, TestName) {
 }
 ```
 
-### Fixtures
+### 固件
 ```cpp
 class DatabaseTest : public ::testing::Test {
 protected:
@@ -183,7 +183,7 @@ TEST_F(DatabaseTest, InsertsRecord) {
 }
 ```
 
-### Parameterized Tests
+### 参数化测试
 ```cpp
 class PrimeTest : public ::testing::TestWithParam<std::pair<int, bool>> {};
 
@@ -199,53 +199,53 @@ INSTANTIATE_TEST_SUITE_P(Primes, PrimeTest, ::testing::Values(
 ));
 ```
 
-## Coverage Commands
+## 覆盖率命令
 
 ```bash
-# Build with coverage
+# 带覆盖率构建
 cmake -DCMAKE_CXX_FLAGS="--coverage" -DCMAKE_EXE_LINKER_FLAGS="--coverage" -B build
 
-# Run tests
+# 运行测试
 cmake --build build && ctest --test-dir build
 
-# Generate coverage report
+# 生成覆盖率报告
 lcov --capture --directory build --output-file coverage.info
 lcov --remove coverage.info '/usr/*' --output-file coverage.info
 genhtml coverage.info --output-directory coverage_html
 ```
 
-## Coverage Targets
+## 覆盖率目标
 
-| Code Type | Target |
+| 代码类型 | 目标 |
 |-----------|--------|
-| Critical business logic | 100% |
-| Public APIs | 90%+ |
-| General code | 80%+ |
-| Generated code | Exclude |
+| 关键业务逻辑 | 100% |
+| 公共 API | 90%+ |
+| 通用代码 | 80%+ |
+| 生成代码 | 排除 |
 
-## TDD Best Practices
+## TDD 最佳实践
 
-**DO:**
-- Write test FIRST, before any implementation
-- Run tests after each change
-- Use `EXPECT_*` (continues) over `ASSERT_*` (stops) when appropriate
-- Test behavior, not implementation details
-- Include edge cases (empty, null, max values, boundary conditions)
+**要做：**
+- 首先编写测试，在任何实现之前
+- 每次更改后运行测试
+- 适当使用 `EXPECT_*`（继续）而不是 `ASSERT_*`（停止）
+- 测试行为，而不是实现细节
+- 包含边缘情况（空、null、最大值、边界条件）
 
-**DON'T:**
-- Write implementation before tests
-- Skip the RED phase
-- Test private methods directly (test through public API)
-- Use `sleep` in tests
-- Ignore flaky tests
+**不要做：**
+- 在测试之前编写实现
+- 跳过红色阶段
+- 直接测试私有方法（通过公共 API 测试）
+- 在测试中使用 `sleep`
+- 忽略不稳定的测试
 
-## Related Commands
+## 相关命令
 
-- `/cpp-build` - Fix build errors
-- `/cpp-review` - Review code after implementation
-- `/verify` - Run full verification loop
+- `/cpp-build` - 修复构建错误
+- `/cpp-review` - 在实现后审查代码
+- `/verify` - 运行完整验证循环
 
-## Related
+## 相关
 
-- Skill: `skills/cpp-testing/`
-- Skill: `skills/tdd-workflow/`
+- 技能：`skills/cpp-testing/`
+- 技能：`skills/tdd-workflow/`

@@ -3,287 +3,287 @@ description: Code review — local uncommitted changes or GitHub PR (pass PR num
 argument-hint: [pr-number | pr-url | blank for local review]
 ---
 
-# Code Review
+# 代码审查
 
-> PR review mode adapted from PRPs-agentic-eng by Wirasm. Part of the PRP workflow series.
+> PR 审查模式改编自 PRPs-agentic-eng by Wirasm。是 PRP 工作流系列的一部分。
 
-**Input**: $ARGUMENTS
-
----
-
-## Mode Selection
-
-If `$ARGUMENTS` contains a PR number, PR URL, or `--pr`:
-→ Jump to **PR Review Mode** below.
-
-Otherwise:
-→ Use **Local Review Mode**.
+**输入**：$ARGUMENTS
 
 ---
 
-## Local Review Mode
+## 模式选择
 
-Comprehensive security and quality review of uncommitted changes.
+如果 `$ARGUMENTS` 包含 PR 编号、PR URL 或 `--pr`：
+→ 跳转到下面的 **PR 审查模式**。
 
-### Phase 1 — GATHER
+否则：
+→ 使用**本地审查模式**。
+
+---
+
+## 本地审查模式
+
+对未提交的更改进行全面的安全和质量问题审查。
+
+### 阶段 1 — 收集
 
 ```bash
 git diff --name-only HEAD
 ```
 
-If no changed files, stop: "Nothing to review."
+如果没有更改的文件，停止：「没有需要审查的内容」。
 
-### Phase 2 — REVIEW
+### 阶段 2 — 审查
 
-Read each changed file in full. Check for:
+完整阅读每个更改的文件。检查：
 
-**Security Issues (CRITICAL):**
-- Hardcoded credentials, API keys, tokens
-- SQL injection vulnerabilities
-- XSS vulnerabilities
-- Missing input validation
-- Insecure dependencies
-- Path traversal risks
+**安全问题（严重）：**
+- 硬编码的凭据、API 密钥、令牌
+- SQL 注入漏洞
+- XSS 漏洞
+- 缺少输入验证
+- 不安全的依赖项
+- 路径遍历风险
 
-**Code Quality (HIGH):**
-- Functions > 50 lines
-- Files > 800 lines
-- Nesting depth > 4 levels
-- Missing error handling
-- console.log statements
-- TODO/FIXME comments
-- Missing JSDoc for public APIs
+**代码质量（高优先级）：**
+- 函数 > 50 行
+- 文件 > 800 行
+- 嵌套深度 > 4 层
+- 缺少错误处理
+- console.log 语句
+- TODO/FIXME 注释
+- 公共 API 缺少 JSDoc
 
-**Best Practices (MEDIUM):**
-- Mutation patterns (use immutable instead)
-- Emoji usage in code/comments
-- Missing tests for new code
-- Accessibility issues (a11y)
+**最佳实践（中优先级）：**
+- 变更模式（使用不可变模式代替）
+- 代码/注释中使用表情符号
+- 新代码缺少测试
+- 可访问性问题（a11y）
 
-### Phase 3 — REPORT
+### 阶段 3 — 报告
 
-Generate report with:
-- Severity: CRITICAL, HIGH, MEDIUM, LOW
-- File location and line numbers
-- Issue description
-- Suggested fix
+生成报告，包含：
+- 严重程度：严重、高、中、低
+- 文件位置和行号
+- 问题描述
+- 建议的修复
 
-Block commit if CRITICAL or HIGH issues found.
-Never approve code with security vulnerabilities.
+如果发现严重或高优先级问题，阻止提交。
+永远不会批准包含安全漏洞的代码。
 
 ---
 
-## PR Review Mode
+## PR 审查模式
 
-Comprehensive GitHub PR review — fetches diff, reads full files, runs validation, posts review.
+全面的 GitHub PR 审查 — 获取 diff、读取完整文件、运行验证、发布审查。
 
-### Phase 1 — FETCH
+### 阶段 1 — 获取
 
-Parse input to determine PR:
+解析输入以确定 PR：
 
-| Input | Action |
+| 输入 | 操作 |
 |---|---|
-| Number (e.g. `42`) | Use as PR number |
-| URL (`github.com/.../pull/42`) | Extract PR number |
-| Branch name | Find PR via `gh pr list --head <branch>` |
+| 数字（如 `42`） | 用作 PR 编号 |
+| URL（`github.com/.../pull/42`） | 提取 PR 编号 |
+| 分支名 | 通过 `gh pr list --head <branch>` 查找 PR |
 
 ```bash
 gh pr view <NUMBER> --json number,title,body,author,baseRefName,headRefName,changedFiles,additions,deletions
 gh pr diff <NUMBER>
 ```
 
-If PR not found, stop with error. Store PR metadata for later phases.
+如果找不到 PR，停止并报错。为后续阶段存储 PR 元数据。
 
-### Phase 2 — CONTEXT
+### 阶段 2 — 上下文
 
-Build review context:
+构建审查上下文：
 
-1. **Project rules** — Read `CLAUDE.md`, `.claude/docs/`, and any contributing guidelines
-2. **PRP artifacts** — Check `.claude/PRPs/reports/` and `.claude/PRPs/plans/` for implementation context related to this PR
-3. **PR intent** — Parse PR description for goals, linked issues, test plans
-4. **Changed files** — List all modified files and categorize by type (source, test, config, docs)
+1. **项目规则** — 阅读 `CLAUDE.md`、`.claude/docs/` 和任何贡献指南
+2. **PRP 工件** — 检查 `.claude/PRPs/reports/` 和 `.claude/PRPs/plans/` 中与此 PR 相关的实现上下文
+3. **PR 意图** — 解析 PR 描述以了解目标、关联的 issues、测试计划
+4. **更改的文件** — 列出所有修改的文件并按类型分类（源码、测试、配置、文档）
 
-### Phase 3 — REVIEW
+### 阶段 3 — 审查
 
-Read each changed file **in full** (not just the diff hunks — you need surrounding context).
+**完整阅读**每个更改的文件（不仅仅是 diff 块 — 需要周围上下文）。
 
-For PR reviews, fetch the full file contents at the PR head revision:
+对于 PR 审查，获取 PR 头版本的完整文件内容：
 ```bash
 gh pr diff <NUMBER> --name-only | while IFS= read -r file; do
   gh api "repos/{owner}/{repo}/contents/$file?ref=<head-branch>" --jq '.content' | base64 -d
 done
 ```
 
-Apply the review checklist across 7 categories:
+在 7 个类别中应用审查清单：
 
-| Category | What to Check |
+| 类别 | 检查内容 |
 |---|---|
-| **Correctness** | Logic errors, off-by-ones, null handling, edge cases, race conditions |
-| **Type Safety** | Type mismatches, unsafe casts, `any` usage, missing generics |
-| **Pattern Compliance** | Matches project conventions (naming, file structure, error handling, imports) |
-| **Security** | Injection, auth gaps, secret exposure, SSRF, path traversal, XSS |
-| **Performance** | N+1 queries, missing indexes, unbounded loops, memory leaks, large payloads |
-| **Completeness** | Missing tests, missing error handling, incomplete migrations, missing docs |
-| **Maintainability** | Dead code, magic numbers, deep nesting, unclear naming, missing types |
+| **正确性** | 逻辑错误、边界错误、空处理、边缘情况、竞态条件 |
+| **类型安全** | 类型不匹配、不安全转换、`any` 使用、缺少泛型 |
+| **模式合规** | 符合项目约定（命名、文件结构、错误处理、导入） |
+| **安全性** | 注入、认证缺口、秘密暴露、SSRF、路径遍历、XSS |
+| **性能** | N+1 查询、缺少索引、无界循环、内存泄漏、大 payload |
+| **完整性** | 缺少测试、缺少错误处理、不完整的迁移、缺少文档 |
+| **可维护性** | 死代码、魔法数字、深层嵌套、命名不清、缺少类型 |
 
-Assign severity to each finding:
+为每个发现分配严重程度：
 
-| Severity | Meaning | Action |
+| 严重程度 | 含义 | 操作 |
 |---|---|---|
-| **CRITICAL** | Security vulnerability or data loss risk | Must fix before merge |
-| **HIGH** | Bug or logic error likely to cause issues | Should fix before merge |
-| **MEDIUM** | Code quality issue or missing best practice | Fix recommended |
-| **LOW** | Style nit or minor suggestion | Optional |
+| **严重** | 安全漏洞或数据丢失风险 | 合并前必须修复 |
+| **高** | 可能导致问题的 bug 或逻辑错误 | 合并前应该修复 |
+| **中** | 代码质量问题或缺少最佳实践 | 建议修复 |
+| **低** | 样式问题或小建议 | 可选 |
 
-### Phase 4 — VALIDATE
+### 阶段 4 — 验证
 
-Run available validation commands:
+运行可用的验证命令：
 
-Detect the project type from config files (`package.json`, `Cargo.toml`, `go.mod`, `pyproject.toml`, etc.), then run the appropriate commands:
+从配置文件（`package.json`、`Cargo.toml`、`go.mod`、`pyproject.toml` 等）检测项目类型，然后运行适当的命令：
 
-**Node.js / TypeScript** (has `package.json`):
+**Node.js / TypeScript**（有 `package.json`）：
 ```bash
-npm run typecheck 2>/dev/null || npx tsc --noEmit 2>/dev/null  # Type check
-npm run lint                                                    # Lint
-npm test                                                        # Tests
-npm run build                                                   # Build
+npm run typecheck 2>/dev/null || npx tsc --noEmit 2>/dev/null  # 类型检查
+npm run lint                                                    # lint
+npm test                                                        # 测试
+npm run build                                                   # 构建
 ```
 
-**Rust** (has `Cargo.toml`):
+**Rust**（有 `Cargo.toml`）：
 ```bash
-cargo clippy -- -D warnings  # Lint
-cargo test                   # Tests
-cargo build                  # Build
+cargo clippy -- -D warnings  # lint
+cargo test                   # 测试
+cargo build                  # 构建
 ```
 
-**Go** (has `go.mod`):
+**Go**（有 `go.mod`）：
 ```bash
-go vet ./...    # Lint
-go test ./...   # Tests
-go build ./...  # Build
+go vet ./...    # lint
+go test ./...   # 测试
+go build ./...  # 构建
 ```
 
-**Python** (has `pyproject.toml` / `setup.py`):
+**Python**（有 `pyproject.toml` / `setup.py`）：
 ```bash
-pytest  # Tests
+pytest  # 测试
 ```
 
-Run only the commands that apply to the detected project type. Record pass/fail for each.
+仅运行适用于检测到的项目类型的命令。记录每个的通过/失败状态。
 
-### Phase 5 — DECIDE
+### 阶段 5 — 决定
 
-Form recommendation based on findings:
+根据发现的问题形成建议：
 
-| Condition | Decision |
+| 条件 | 决定 |
 |---|---|
-| Zero CRITICAL/HIGH issues, validation passes | **APPROVE** |
-| Only MEDIUM/LOW issues, validation passes | **APPROVE** with comments |
-| Any HIGH issues or validation failures | **REQUEST CHANGES** |
-| Any CRITICAL issues | **BLOCK** — must fix before merge |
+| 无严重/高优先级问题，验证通过 | **批准** |
+| 仅有中/低优先级问题，验证通过 | **批准**（带评论） |
+| 任何高优先级问题或验证失败 | **请求更改** |
+| 任何严重问题 | **阻止** — 合并前必须修复 |
 
-Special cases:
-- Draft PR → Always use **COMMENT** (not approve/block)
-- Only docs/config changes → Lighter review, focus on correctness
-- Explicit `--approve` or `--request-changes` flag → Override decision (but still report all findings)
+特殊情况：
+- 草稿 PR → 始终使用**评论**（不是批准/阻止）
+- 仅文档/配置更改 → 较轻的审查，重点关注正确性
+- 明确的 `--approve` 或 `--request-changes` 标志 → 覆盖决定（但仍报告所有发现）
 
-### Phase 6 — REPORT
+### 阶段 6 — 报告
 
-Create review artifact at `.claude/PRPs/reviews/pr-<NUMBER>-review.md`:
+在 `.claude/PRPs/reviews/pr-<NUMBER>-review.md` 创建审查工件：
 
 ```markdown
-# PR Review: #<NUMBER> — <TITLE>
+# PR 审查：#<NUMBER> — <标题>
 
-**Reviewed**: <date>
-**Author**: <author>
-**Branch**: <head> → <base>
-**Decision**: APPROVE | REQUEST CHANGES | BLOCK
+**审查时间**：<日期>
+**作者**：<作者>
+**分支**：<head> → <base>
+**决定**：批准 | 请求更改 | 阻止
 
-## Summary
-<1-2 sentence overall assessment>
+## 摘要
+<1-2 句总体评估>
 
-## Findings
+## 发现
 
-### CRITICAL
-<findings or "None">
+### 严重
+<发现或「无">
 
-### HIGH
-<findings or "None">
+### 高
+<发现或「无">
 
-### MEDIUM
-<findings or "None">
+### 中
+<发现或「无">
 
-### LOW
-<findings or "None">
+### 低
+<发现或「无">
 
-## Validation Results
+## 验证结果
 
-| Check | Result |
+| 检查 | 结果 |
 |---|---|
-| Type check | Pass / Fail / Skipped |
-| Lint | Pass / Fail / Skipped |
-| Tests | Pass / Fail / Skipped |
-| Build | Pass / Fail / Skipped |
+| 类型检查 | 通过 / 失败 / 跳过 |
+| Lint | 通过 / 失败 / 跳过 |
+| 测试 | 通过 / 失败 / 跳过 |
+| 构建 | 通过 / 失败 / 跳过 |
 
-## Files Reviewed
-<list of files with change type: Added/Modified/Deleted>
+## 审查的文件
+<按类型列出的文件列表：添加/修改/删除>
 ```
 
-### Phase 7 — PUBLISH
+### 阶段 7 — 发布
 
-Post the review to GitHub:
+将审查发布到 GitHub：
 
 ```bash
-# If APPROVE
-gh pr review <NUMBER> --approve --body "<summary of review>"
+# 如果批准
+gh pr review <NUMBER> --approve --body "<审查摘要>"
 
-# If REQUEST CHANGES
-gh pr review <NUMBER> --request-changes --body "<summary with required fixes>"
+# 如果请求更改
+gh pr review <NUMBER> --request-changes --body "<包含所需修复的摘要>"
 
-# If COMMENT only (draft PR or informational)
-gh pr review <NUMBER> --comment --body "<summary>"
+# 仅评论（草稿 PR 或信息性）
+gh pr review <NUMBER> --comment --body "<摘要>"
 ```
 
-For inline comments on specific lines, use the GitHub review comments API:
+对于特定行的内联评论，使用 GitHub 审查评论 API：
 ```bash
 gh api "repos/{owner}/{repo}/pulls/<NUMBER>/comments" \
-  -f body="<comment>" \
-  -f path="<file>" \
-  -F line=<line-number> \
+  -f body="<评论>" \
+  -f path="<文件>" \
+  -F line=<行号> \
   -f side="RIGHT" \
   -f commit_id="$(gh pr view <NUMBER> --json headRefOid --jq .headRefOid)"
 ```
 
-Alternatively, post a single review with multiple inline comments at once:
+或者，一次发布带有多个内联评论的单个审查：
 ```bash
 gh api "repos/{owner}/{repo}/pulls/<NUMBER>/reviews" \
   -f event="COMMENT" \
-  -f body="<overall summary>" \
+  -f body="<总体摘要>" \
   --input comments.json  # [{"path": "file", "line": N, "body": "comment"}, ...]
 ```
 
-### Phase 8 — OUTPUT
+### 阶段 8 — 输出
 
-Report to user:
+向用户报告：
 
 ```
-PR #<NUMBER>: <TITLE>
-Decision: <APPROVE|REQUEST_CHANGES|BLOCK>
+PR #<NUMBER>：<标题>
+决定：<批准|请求更改|阻止>
 
-Issues: <critical_count> critical, <high_count> high, <medium_count> medium, <low_count> low
-Validation: <pass_count>/<total_count> checks passed
+问题：<严重数量> 严重，<高数量> 高，<中数量> 中，<低数量> 低
+验证：<通过数量>/<总数> 检查通过
 
-Artifacts:
-  Review: .claude/PRPs/reviews/pr-<NUMBER>-review.md
-  GitHub: <PR URL>
+工件：
+  审查：.claude/PRPs/reviews/pr-<NUMBER>-review.md
+  GitHub：<PR URL>
 
-Next steps:
-  - <contextual suggestions based on decision>
+后续步骤：
+  - <基于决定的上下文建议>
 ```
 
 ---
 
-## Edge Cases
+## 边缘情况
 
-- **No `gh` CLI**: Fall back to local-only review (read the diff, skip GitHub publish). Warn user.
-- **Diverged branches**: Suggest `git fetch origin && git rebase origin/<base>` before review.
-- **Large PRs (>50 files)**: Warn about review scope. Focus on source changes first, then tests, then config/docs.
+- **没有 `gh` CLI**：回退到仅本地审查（读取 diff，跳过 GitHub 发布）。警告用户。
+- **分支分歧**：建议在审查前执行 `git fetch origin && git rebase origin/<base>`。
+- **大型 PR（>50 个文件）**：警告审查范围。先关注源代码更改，然后是测试，最后是配置/文档。

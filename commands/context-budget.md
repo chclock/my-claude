@@ -2,22 +2,23 @@
 description: Legacy slash-entry shim for the context-budget skill. Prefer the skill directly.
 ---
 
-# Context Budget Optimizer (Legacy Shim)
+# Context Budget 优化器（遗留兼容层）
 
-Use this only if you still invoke `/context-budget`. The maintained workflow lives in `skills/context-budget/SKILL.md`.
+仅在仍在使用 `/context-budget` 时使用此命令。主要的工作流程位于 `skills/context-budget/SKILL.md`。
 
-## Canonical Surface
+## 规范接口
 
-- Prefer the `context-budget` skill directly.
-- Keep this file only as a compatibility entry point.
+- 直接使用 `context-budget` skill。
+- 仅将此文件作为兼容性入口点保留。
 
-## Arguments
+## 参数
 
 $ARGUMENTS
 
-## Delegation
+## 委托
 
-Apply the `context-budget` skill.
-- Pass through `--verbose` if the user supplied it.
-- Assume a 200K context window unless the user specified otherwise.
+应用 `context-budget` skill。
+- 如果用户提供了 `--verbose`，则透传该参数。
+- 假设上下文窗口为 200K，除非用户另有指定。
+- 返回 skill 的清单、问题检测和优先级优化建议报告，无需在此重新实现扫描逻辑。K context window unless the user specified otherwise.
 - Return the skill's inventory, issue detection, and prioritized savings report without re-implementing the scan here.

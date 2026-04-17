@@ -2,70 +2,70 @@
 description: Save current session state to a dated file in ~/.claude/session-data/ so work can be resumed in a future session with full context.
 ---
 
-# Save Session Command
+# 保存会话命令
 
-Capture everything that happened in this session — what was built, what worked, what failed, what's left — and write it to a dated file so the next session can pick up exactly where this one left off.
+捕获此会话中发生的一切——构建了什么，什么成功了，什么失败了，还剩什么——并将其写入带日期的文件，以便下一个会话可以准确地从停止的地方继续。
 
-## When to Use
+## 使用场景
 
-- End of a work session before closing Claude Code
-- Before hitting context limits (run this first, then start a fresh session)
-- After solving a complex problem you want to remember
-- Any time you need to hand off context to a future session
+- 关闭 Claude Code 之前结束工作会话
+- 在达到上下文限制之前（先运行此命令，然后开始新的会话）
+- 解决了一个想要记住的复杂问题之后
+- 任何需要将上下文移交给未来会话的时候
 
-## Process
+## 流程
 
-### Step 1: Gather context
+### 步骤 1: 收集上下文
 
-Before writing the file, collect:
+在写入文件之前，收集：
 
-- Read all files modified during this session (use git diff or recall from conversation)
-- Review what was discussed, attempted, and decided
-- Note any errors encountered and how they were resolved (or not)
-- Check current test/build status if relevant
+- 阅读此会话期间修改的所有文件（使用 git diff 或从对话中回忆）
+- 回顾讨论了什么、尝试了什么、决定了什么
+- 记下遇到的任何错误以及如何解决的（或没有解决）
+- 检查当前的测试/构建状态（如果相关）
 
-### Step 2: Create the sessions folder if it doesn't exist
+### 步骤 2: 如果会话文件夹不存在则创建它
 
-Create the canonical sessions folder in the user's Claude home directory:
+在用户的 Claude 主目录中创建规范的会话文件夹：
 
 ```bash
 mkdir -p ~/.claude/session-data
 ```
 
-### Step 3: Write the session file
+### 步骤 3: 写入会话文件
 
-Create `~/.claude/session-data/YYYY-MM-DD-<short-id>-session.tmp`, using today's actual date and a short-id that satisfies the rules enforced by `SESSION_FILENAME_REGEX` in `session-manager.js`:
+创建 `~/.claude/session-data/YYYY-MM-DD-<short-id>-session.tmp`，使用今天的实际日期和满足 `session-manager.js` 中 `SESSION_FILENAME_REGEX` 规则约束的短 ID：
 
-- Compatibility characters: letters `a-z` / `A-Z`, digits `0-9`, hyphens `-`, underscores `_`
-- Compatibility minimum length: 1 character
-- Recommended style for new files: lowercase letters, digits, and hyphens with 8+ characters to avoid collisions
+- 兼容字符：`a-z` / `A-Z`、数字 `0-9`、连字符 `-`、下划线 `_`
+- 兼容最小长度：1 个字符
+- 新文件推荐样式：小写字母、数字和连字符，8+ 字符以避免冲突
 
-Valid examples: `abc123de`, `a1b2c3d4`, `frontend-worktree-1`, `ChezMoi_2`
-Avoid for new files: `A`, `test_id1`, `ABC123de`
+有效示例：`abc123de`、`a1b2c3d4`、`frontend-worktree-1`、`ChezMoi_2`
+新文件避免：`A`、`test_id1`、`ABC123de`
 
-Full valid filename example: `2024-01-15-abc123de-session.tmp`
+完整有效文件名示例：`2024-01-15-abc123de-session.tmp`
 
-The legacy filename `YYYY-MM-DD-session.tmp` is still valid, but new session files should prefer the short-id form to avoid same-day collisions.
+旧文件名格式 `YYYY-MM-DD-session.tmp` 仍然有效，但新会话文件应优先使用短 ID 格式以避免同日冲突。
 
-### Step 4: Populate the file with all sections below
+### 步骤 4: 用以下所有部分填充文件
 
-Write every section honestly. Do not skip sections — write "Nothing yet" or "N/A" if a section genuinely has no content. An incomplete file is worse than an honest empty section.
+诚实撰写每个部分。不要跳过部分——如果某个部分确实没有内容，写上"暂无"或"N/A"。不完整的文件比诚实空着的部分更糟糕。
 
-### Step 5: Show the file to the user
+### 步骤 5: 向用户展示文件
 
-After writing, display the full contents and ask:
+写入后，显示完整内容并询问：
 
 ```
-Session saved to [actual resolved path to the session file]
+会话已保存到 [实际解析的会话文件路径]
 
-Does this look accurate? Anything to correct or add before we close?
+这看起来准确吗？在我们关闭之前有什么需要纠正或添加的吗？
 ```
 
-Wait for confirmation. Make edits if requested.
+等待确认。如有请求，进行编辑。
 
 ---
 
-## Session File Format
+## 会话文件格式
 
 ```markdown
 # Session: YYYY-MM-DD
@@ -167,7 +167,7 @@ If none: "No active blockers."
 enough that resuming requires zero thinking about where to start.]
 
 [If not known: "Next step not determined — review 'What Has NOT Been Tried Yet'
-and 'Blockers' sections to decide on direction before starting."]
+and 'Blockers' sections to decide on direction before starting.]
 
 ---
 
@@ -181,7 +181,7 @@ required, services that need to be running, etc. Skip if standard setup.]
 
 ---
 
-## Example Output
+## 示例输出
 
 ```markdown
 # Session: 2024-01-15
@@ -265,11 +265,11 @@ Then test with Postman — the response should include a `Set-Cookie` header.
 
 ---
 
-## Notes
+## 注意事项
 
-- Each session gets its own file — never append to a previous session's file
-- The "What Did NOT Work" section is the most critical — future sessions will blindly retry failed approaches without it
-- If the user asks to save mid-session (not just at the end), save what's known so far and mark in-progress items clearly
-- The file is meant to be read by Claude at the start of the next session via `/resume-session`
-- Use the canonical global session store: `~/.claude/session-data/`
-- Prefer the short-id filename form (`YYYY-MM-DD-<short-id>-session.tmp`) for any new session file
+- 每个会话获得自己的文件——永不追加到前一个会话的文件
+- "What Did NOT Work" 部分是最关键的——未来会话如果没有它会盲目重试失败的方法
+- 如果用户在会话中间要求保存（不仅仅是结束时），保存目前已知的内容并明确标记进行中的项目
+- 该文件旨在通过 `/resume-session` 在下一个会话开始时由 Claude 读取
+- 使用规范的全局会话存储：`~/.claude/session-data/`
+- 优先使用短 ID 文件名形式（`YYYY-MM-DD-<short-id>-session.tmp`）用于任何新的会话文件

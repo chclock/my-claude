@@ -2,22 +2,22 @@
 description: Legacy slash-entry shim for the documentation-lookup skill. Prefer the skill directly.
 ---
 
-# Docs Command (Legacy Shim)
+# Docs 命令（遗留兼容层）
 
-Use this only if you still reach for `/docs`. The maintained workflow lives in `skills/documentation-lookup/SKILL.md`.
+仅在仍使用 `/docs` 时使用此命令。主要的工作流程位于 `skills/documentation-lookup/SKILL.md`。
 
-## Canonical Surface
+## 规范接口
 
-- Prefer the `documentation-lookup` skill directly.
-- Keep this file only as a compatibility entry point.
+- 直接使用 `documentation-lookup` skill。
+- 仅将此文件作为兼容性入口点保留。
 
-## Arguments
+## 参数
 
 `$ARGUMENTS`
 
-## Delegation
+## 委托
 
-Apply the `documentation-lookup` skill.
-- If the library or the question is missing, ask for the missing part.
-- Use live documentation through Context7 instead of training data.
-- Return only the current answer and the minimum code/example surface needed.
+应用 `documentation-lookup` skill。
+- 如果库或问题描述缺失，请询问缺失的部分。
+- 使用 Context7 的实时文档而非训练数据。
+- 只返回当前答案以及所需的最少代码或示例。

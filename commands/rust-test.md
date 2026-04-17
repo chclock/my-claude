@@ -2,46 +2,46 @@
 description: Enforce TDD workflow for Rust. Write tests first, then implement. Verify 80%+ coverage with cargo-llvm-cov.
 ---
 
-# Rust TDD Command
+# Rust TDD 命令
 
-This command enforces test-driven development methodology for Rust code using `#[test]`, rstest, proptest, and mockall.
+此命令使用 `#[test]`、rstest、proptest 和 mockall 强制执行 Rust 代码的测试驱动开发方法论。
 
-## What This Command Does
+## 此命令的作用
 
-1. **Define Types/Traits**: Scaffold function signatures with `todo!()`
-2. **Write Tests**: Create comprehensive test module (RED)
-3. **Run Tests**: Verify tests fail for the right reason
-4. **Implement Code**: Write minimal code to pass (GREEN)
-5. **Refactor**: Improve while keeping tests green
-6. **Check Coverage**: Ensure 80%+ coverage with cargo-llvm-cov
+1. **定义类型/特征**：使用 `todo!()` 搭建函数签名
+2. **编写测试**：创建全面的测试模块（红色）
+3. **运行测试**：验证测试因正确的原因失败
+4. **实现代码**：编写最少的代码通过（绿色）
+5. **重构**：在保持测试绿色的同时改进
+6. **检查覆盖率**：使用 cargo-llvm-cov 确保 80%+ 覆盖率
 
-## When to Use
+## 使用场景
 
-Use `/rust-test` when:
-- Implementing new Rust functions, methods, or traits
-- Adding test coverage to existing Rust code
-- Fixing bugs (write failing test first)
-- Building critical business logic
-- Learning TDD workflow in Rust
+在以下情况下使用 `/rust-test`：
+- 实现新的 Rust 函数、方法或特征
+- 为现有 Rust 代码添加测试覆盖率
+- 修复 bug（首先编写失败的测试）
+- 构建关键业务逻辑
+- 学习 Rust 中的 TDD 工作流程
 
-## TDD Cycle
+## TDD 循环
 
 ```
-RED     -> Write failing test first
-GREEN   -> Implement minimal code to pass
-REFACTOR -> Improve code, tests stay green
-REPEAT  -> Next test case
+红色     -> 首先编写失败的测试
+绿色   -> 实现最少的代码通过
+重构 -> 改进代码，测试保持绿色
+重复  -> 下一个测试用例
 ```
 
-## Example Session
+## 示例会话
 
 ````text
-User: /rust-test I need a function to validate user registration
+用户: /rust-test 我需要一个函数来验证用户注册
 
 Agent:
-# TDD Session: Registration Validator
+# TDD 会话: 注册验证器
 
-## Step 1: Define Interface
+## 步骤 1: 定义接口
 
 ```rust
 // src/validator.rs
@@ -61,7 +61,7 @@ pub fn validate_registration(request: &RegistrationRequest) -> ValidationResult 
 }
 ```
 
-## Step 2: Write Tests (RED)
+## 步骤 2: 编写测试（红色）
 
 ```rust
 #[cfg(test)]
@@ -121,7 +121,7 @@ mod tests {
 }
 ```
 
-## Step 3: Run Tests — Verify FAIL
+## 步骤 3: 运行测试 — 验证失败
 
 ```bash
 $ cargo test
@@ -132,9 +132,9 @@ test tests::invalid_email_returns_invalid ... FAILED
 test tests::short_password_returns_invalid ... FAILED
 ```
 
-Tests fail as expected (todo! panic).
+测试按预期失败（todo! panic）。
 
-## Step 4: Implement Minimal Code (GREEN)
+## 步骤 4: 实现最少代码（绿色）
 
 ```rust
 pub fn validate_registration(request: &RegistrationRequest) -> ValidationResult {
@@ -158,7 +158,7 @@ pub fn validate_registration(request: &RegistrationRequest) -> ValidationResult 
 }
 ```
 
-## Step 5: Run Tests — Verify PASS
+## 步骤 5: 运行测试 — 验证通过
 
 ```bash
 $ cargo test
@@ -171,23 +171,23 @@ test tests::short_password_returns_invalid ... ok
 test result: ok. 4 passed; 0 failed
 ```
 
-All tests passing!
+所有测试通过！
 
-## Step 6: Check Coverage
+## 步骤 6: 检查覆盖率
 
 ```bash
 $ cargo llvm-cov
 Coverage: 100.0% of lines
 ```
 
-Coverage: 100%
+覆盖率: 100%
 
-## TDD Complete!
+## TDD 完成！
 ````
 
-## Test Patterns
+## 测试模式
 
-### Unit Tests
+### 单元测试
 
 ```rust
 #[cfg(test)]
@@ -208,7 +208,7 @@ mod tests {
 }
 ```
 
-### Parameterized Tests with rstest
+### 使用 rstest 的参数化测试
 
 ```rust
 use rstest::{rstest, fixture};
@@ -222,7 +222,7 @@ fn test_string_length(#[case] input: &str, #[case] expected: usize) {
 }
 ```
 
-### Async Tests
+### 异步测试
 
 ```rust
 #[tokio::test]
@@ -233,7 +233,7 @@ async fn fetches_data_successfully() {
 }
 ```
 
-### Property-Based Tests
+### 属性测试
 
 ```rust
 use proptest::prelude::*;
@@ -248,61 +248,61 @@ proptest! {
 }
 ```
 
-## Coverage Commands
+## 覆盖率命令
 
 ```bash
-# Summary report
+# 摘要报告
 cargo llvm-cov
 
-# HTML report
+# HTML 报告
 cargo llvm-cov --html
 
-# Fail if below threshold
+# 低于阈值时失败
 cargo llvm-cov --fail-under-lines 80
 
-# Run specific test
+# 运行特定测试
 cargo test test_name
 
-# Run with output
+# 带输出运行
 cargo test -- --nocapture
 
-# Run without stopping on first failure
+# 不在首次失败时停止
 cargo test --no-fail-fast
 ```
 
-## Coverage Targets
+## 覆盖率目标
 
-| Code Type | Target |
+| 代码类型 | 目标 |
 |-----------|--------|
-| Critical business logic | 100% |
-| Public API | 90%+ |
-| General code | 80%+ |
-| Generated / FFI bindings | Exclude |
+| 关键业务逻辑 | 100% |
+| 公共 API | 90%+ |
+| 通用代码 | 80%+ |
+| 生成 / FFI 绑定 | 排除 |
 
-## TDD Best Practices
+## TDD 最佳实践
 
-**DO:**
-- Write test FIRST, before any implementation
-- Run tests after each change
-- Use `assert_eq!` over `assert!` for better error messages
-- Use `?` in tests that return `Result` for cleaner output
-- Test behavior, not implementation
-- Include edge cases (empty, boundary, error paths)
+**要做：**
+- 先写测试，再写任何实现
+- 每次更改后运行测试
+- 使用 `assert_eq!` 而非 `assert!` 以获得更好的错误消息
+- 在返回 `Result` 的测试中使用 `?` 以获得更清晰的输出
+- 测试行为，而非实现
+- 包含边界情况（空、边界、错误路径）
 
-**DON'T:**
-- Write implementation before tests
-- Skip the RED phase
-- Use `#[should_panic]` when `Result::is_err()` works
-- Use `sleep()` in tests — use channels or `tokio::time::pause()`
-- Mock everything — prefer integration tests when feasible
+**不要做：**
+- 在测试之前编写实现
+- 跳过红色阶段
+- 当 `Result::is_err()` 可用时使用 `#[should_panic]`
+- 在测试中使用 `sleep()` — 使用通道或 `tokio::time::pause()`
+- Mock 一切 — 尽可能优先使用集成测试
 
-## Related Commands
+## 相关命令
 
-- `/rust-build` - Fix build errors
-- `/rust-review` - Review code after implementation
-- `/verify` - Run full verification loop
+- `/rust-build` - 修复构建错误
+- `/rust-review` - 实现后审查代码
+- `/verify` - 运行完整验证循环
 
-## Related
+## 相关
 
-- Skill: `skills/rust-testing/`
-- Skill: `skills/rust-patterns/`
+- 技能: `skills/rust-testing/`
+- 技能: `skills/rust-patterns/`

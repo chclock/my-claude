@@ -1,124 +1,123 @@
-# Code Review Standards
+# 代码审查标准
 
-## Purpose
+## 目的
 
-Code review ensures quality, security, and maintainability before code is merged. This rule defines when and how to conduct code reviews.
+代码审查确保代码合并前的质量、安全性和可维护性。本规则定义了何时以及如何进行代码审查。
 
-## When to Review
+## 何时审查
 
-**MANDATORY review triggers:**
+**必须审查的触发条件：**
 
-- After writing or modifying code
-- Before any commit to shared branches
-- When security-sensitive code is changed (auth, payments, user data)
-- When architectural changes are made
-- Before merging pull requests
+- 编写或修改代码后
+- 提交到共享分支前
+- 安全敏感代码变更时（认证、支付、用户数据）
+- 进行架构变更时
+- 合并拉取请求前
 
-**Pre-Review Requirements:**
+**审查前要求：**
 
-Before requesting review, ensure:
+请求审查前，确保：
+- 所有自动化检查（CI/CD）通过
+- 合并冲突已解决
+- 分支与目标分支同步
 
-- All automated checks (CI/CD) are passing
-- Merge conflicts are resolved
-- Branch is up to date with target branch
+## 审查清单
 
-## Review Checklist
+代码完成前检查：
 
-Before marking code complete:
+- [ ] 代码可读且命名良好
+- [ ] 函数专注（<50 行）
+- [ ] 文件内聚（<800 行）
+- [ ] 无深层嵌套（>4 层）
+- [ ] 错误处理明确
+- [ ] 无硬编码密钥或凭证
+- [ ] 无 console.log 或调试语句
+- [ ] 新功能有测试
+- [ ] 测试覆盖率符合 80% 最低要求
 
-- [ ] Code is readable and well-named
-- [ ] Functions are focused (<50 lines)
-- [ ] Files are cohesive (<800 lines)
-- [ ] No deep nesting (>4 levels)
-- [ ] Errors are handled explicitly
-- [ ] No hardcoded secrets or credentials
-- [ ] No console.log or debug statements
-- [ ] Tests exist for new functionality
-- [ ] Test coverage meets 80% minimum
+## 安全审查触发条件
 
-## Security Review Triggers
+**停止并使用 security-reviewer agent 当：**
 
-**STOP and use security-reviewer agent when:**
+- 认证或授权代码
+- 用户输入处理
+- 数据库查询
+- 文件系统操作
+- 外部 API 调用
+- 加密操作
+- 支付或财务代码
 
-- Authentication or authorization code
-- User input handling
-- Database queries
-- File system operations
-- External API calls
-- Cryptographic operations
-- Payment or financial code
+## 审查严重级别
 
-## Review Severity Levels
-
-| Level | Meaning | Action |
+| 级别 | 含义 | 操作 |
 |-------|---------|--------|
-| CRITICAL | Security vulnerability or data loss risk | **BLOCK** - Must fix before merge |
-| HIGH | Bug or significant quality issue | **WARN** - Should fix before merge |
-| MEDIUM | Maintainability concern | **INFO** - Consider fixing |
-| LOW | Style or minor suggestion | **NOTE** - Optional |
+| CRITICAL | 安全漏洞或数据丢失风险 | **阻止** — 合并前必须修复 |
+| HIGH | Bug 或重大质量问题 | **警告** — 合并前应修复 |
+| MEDIUM | 可维护性问题 | **信息** — 考虑修复 |
+| LOW | 样式或小建议 | **备注** — 可选 |
 
-## Agent Usage
+## Agent 使用
 
-Use these agents for code review:
+使用这些 Agent 进行代码审查：
 
-| Agent | Purpose |
+| Agent | 用途 |
 |-------|---------|
-| **code-reviewer** | General code quality, patterns, best practices |
-| **security-reviewer** | Security vulnerabilities, OWASP Top 10 |
-| **typescript-reviewer** | TypeScript/JavaScript specific issues |
-| **python-reviewer** | Python specific issues |
-| **go-reviewer** | Go specific issues |
-| **rust-reviewer** | Rust specific issues |
+| **code-reviewer** | 通用代码质量、模式、最佳实践 |
+| **security-reviewer** | 安全漏洞、OWASP Top 10 |
+| **typescript-reviewer** | TypeScript/JavaScript 特定问题 |
+| **python-reviewer** | Python 特定问题 |
+| **go-reviewer** | Go 特定问题 |
+| **rust-reviewer** | Rust 特定问题 |
 
-## Review Workflow
+## 审查工作流程
 
 ```
-1. Run git diff to understand changes
-2. Check security checklist first
-3. Review code quality checklist
-4. Run relevant tests
-5. Verify coverage >= 80%
-6. Use appropriate agent for detailed review
+1. 运行 git diff 了解变更
+2. 首先检查安全清单
+3. 审查代码质量清单
+4. 运行相关测试
+5. 验证覆盖率 >= 80%
+6. 使用适当的 Agent 进行详细审查
 ```
 
-## Common Issues to Catch
+## 常见问题捕获
 
-### Security
+### 安全
 
-- Hardcoded credentials (API keys, passwords, tokens)
-- SQL injection (string concatenation in queries)
-- XSS vulnerabilities (unescaped user input)
-- Path traversal (unsanitized file paths)
-- CSRF protection missing
-- Authentication bypasses
+- 硬编码凭证（API 密钥、密码、令牌）
+- SQL 注入（查询中的字符串拼接）
+- XSS 漏洞（未转义的用户输入）
+- 路径遍历（未清理的文件路径）
+- CSRF 保护缺失
+- 认证绕过
 
-### Code Quality
+### 代码质量
 
-- Large functions (>50 lines) - split into smaller
-- Large files (>800 lines) - extract modules
-- Deep nesting (>4 levels) - use early returns
-- Missing error handling - handle explicitly
-- Mutation patterns - prefer immutable operations
-- Missing tests - add test coverage
+- 大函数（>50 行）— 拆分为更小的
+- 大文件（>800 行）— 提取模块
+- 深层嵌套（>4 层）— 使用早期返回
+- 缺失错误处理— 明确处理
+- 变更模式— 首选不可变操作
+- 缺失测试— 添加测试覆盖率
 
-### Performance
+### 性能
 
-- N+1 queries - use JOINs or batching
-- Missing pagination - add LIMIT to queries
-- Unbounded queries - add constraints
-- Missing caching - cache expensive operations
+- N+1 查询— 使用 JOIN 或批处理
+- 缺失分页— 添加 LIMIT 到查询
+- 无界查询— 添加约束
+- 缺失缓存— 缓存昂贵操作
 
-## Approval Criteria
+## 批准标准
 
-- **Approve**: No CRITICAL or HIGH issues
-- **Warning**: Only HIGH issues (merge with caution)
-- **Block**: CRITICAL issues found
+- **批准**：无 CRITICAL 或 HIGH 问题
+- **警告**：仅有 HIGH 问题（谨慎合并）
+- **阻止**：发现 CRITICAL 问题
 
-## Integration with Other Rules
+## 与其他规则的集成
 
-This rule works with:
+本规则配合使用：
 
-- [testing.md](testing.md) - Test coverage requirements
-- [security.md](security.md) - Security checklist
-- [git-workflow.md](git-workflow.md) - Commit standards
-- [agents.md](agents.md) - Agent delegation
+- [testing.md](testing.md) — 测试覆盖率要求
+- [security.md](security.md) — 安全清单
+- [git-workflow.md](git-workflow.md) — 提交标准
+- [agents.md](agents.md) — Agent 委托

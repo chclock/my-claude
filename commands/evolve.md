@@ -4,126 +4,129 @@ description: Analyze instincts and suggest or generate evolved structures
 command: true
 ---
 
-# Evolve Command
+# Evolve 命令
 
-## Implementation
+## 实现
 
-Run the instinct CLI using the plugin root path:
+使用插件根路径运行 instinct CLI：
 
 ```bash
 python3 "${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py" evolve [--generate]
 ```
 
-Or if `CLAUDE_PLUGIN_ROOT` is not set (manual installation):
+或者如果未设置 `CLAUDE_PLUGIN_ROOT`（手动安装）：
 
 ```bash
 python3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py evolve [--generate]
 ```
 
-Analyzes instincts and clusters related ones into higher-level structures:
-- **Commands**: When instincts describe user-invoked actions
-- **Skills**: When instincts describe auto-triggered behaviors
-- **Agents**: When instincts describe complex, multi-step processes
+分析 instincts 并将相关的聚合成更高级别的结构：
+- **命令**：当 instincts 描述用户调用的操作时
+- **技能**：当 instincts 描述自动触发的行为时
+- **代理**：当 instincts 描述复杂的多步骤过程时
 
-## Usage
+## 使用方法
 
 ```
-/evolve                    # Analyze all instincts and suggest evolutions
-/evolve --generate         # Also generate files under evolved/{skills,commands,agents}
+/evolve                    # 分析所有 instincts 并建议演进
+/evolve --generate         # 同时在 evolved/{skills,commands,agents} 下生成文件
 ```
 
-## Evolution Rules
+## 演进规则
 
-### → Command (User-Invoked)
-When instincts describe actions a user would explicitly request:
-- Multiple instincts about "when user asks to..."
-- Instincts with triggers like "when creating a new X"
-- Instincts that follow a repeatable sequence
+### → 命令（用户调用）
 
-Example:
-- `new-table-step1`: "when adding a database table, create migration"
-- `new-table-step2`: "when adding a database table, update schema"
-- `new-table-step3`: "when adding a database table, regenerate types"
+当 instincts 描述用户会明确请求的操作时：
+- 多个关于「当用户要求...」的 instincts
+- 触发器如「当创建新的 X 时」的 instincts
+- 遵循可重复序列的 instincts
 
-→ Creates: **new-table** command
+示例：
+- `new-table-step1`：「当添加数据库表时，创建迁移」
+- `new-table-step2`：「当添加数据库表时，更新 schema」
+- `new-table-step3`：「当添加数据库表时，重新生成类型」
 
-### → Skill (Auto-Triggered)
-When instincts describe behaviors that should happen automatically:
-- Pattern-matching triggers
-- Error handling responses
-- Code style enforcement
+→ 创建：**new-table** 命令
 
-Example:
-- `prefer-functional`: "when writing functions, prefer functional style"
-- `use-immutable`: "when modifying state, use immutable patterns"
-- `avoid-classes`: "when designing modules, avoid class-based design"
+### → 技能（自动触发）
 
-→ Creates: `functional-patterns` skill
+当 instincts 描述应该自动发生的行为时：
+- 模式匹配触发器
+- 错误处理响应
+- 代码风格强制
 
-### → Agent (Needs Depth/Isolation)
-When instincts describe complex, multi-step processes that benefit from isolation:
-- Debugging workflows
-- Refactoring sequences
-- Research tasks
+示例：
+- `prefer-functional`：「当编写函数时，优先使用函数式风格」
+- `use-immutable`：「当修改状态时，使用不可变模式」
+- `avoid-classes`：「当设计模块时，避免基于类的设计」
 
-Example:
-- `debug-step1`: "when debugging, first check logs"
-- `debug-step2`: "when debugging, isolate the failing component"
-- `debug-step3`: "when debugging, create minimal reproduction"
-- `debug-step4`: "when debugging, verify fix with test"
+→ 创建：`functional-patterns` 技能
 
-→ Creates: **debugger** agent
+### → 代理（需要深度/隔离）
 
-## What to Do
+当 instincts 描述复杂的、多步骤的过程时：
+- 调试工作流
+- 重构序列
+- 研究任务
 
-1. Detect current project context
-2. Read project + global instincts (project takes precedence on ID conflicts)
-3. Group instincts by trigger/domain patterns
-4. Identify:
-   - Skill candidates (trigger clusters with 2+ instincts)
-   - Command candidates (high-confidence workflow instincts)
-   - Agent candidates (larger, high-confidence clusters)
-5. Show promotion candidates (project -> global) when applicable
-6. If `--generate` is passed, write files to:
-   - Project scope: `~/.claude/homunculus/projects/<project-id>/evolved/`
-   - Global fallback: `~/.claude/homunculus/evolved/`
+示例：
+- `debug-step1`：「当调试时，首先检查日志」
+- `debug-step2`：「当调试时，隔离失败的组件」
+- `debug-step3`：「当调试时，创建最小复现」
+- `debug-step4`：「当调试时，用测试验证修复」
 
-## Output Format
+→ 创建：**debugger** 代理
+
+## 做什么
+
+1. 检测当前项目上下文
+2. 读取项目和全局 instincts（项目在 ID 冲突时优先）
+3. 按触发器/域模式对 instincts 进行分组
+4. 识别：
+   - 技能候选（具有 2+ instincts 的触发器集群）
+   - 命令候选（高置信度工作流 instincts）
+   - 代理候选（更大、更高置信度的集群）
+5. 显示升级候选（项目 → 全局）当适用时
+6. 如果传递了 `--generate`，将文件写入：
+   - 项目范围：`~/.claude/homunculus/projects/<project-id>/evolved/`
+   - 全局后备：`~/.claude/homunculus/evolved/`
+
+## 输出格式
 
 ```
 ============================================================
-  EVOLVE ANALYSIS - 12 instincts
-  Project: my-app (a1b2c3d4e5f6)
-  Project-scoped: 8 | Global: 4
+  EVOLVE 分析 - 12 个 instincts
+  项目：my-app (a1b2c3d4e5f6)
+  项目范围：8 | 全局：4
 ============================================================
 
-High confidence instincts (>=80%): 5
+高置信度 instincts（>=80%）：5
 
-## SKILL CANDIDATES
-1. Cluster: "adding tests"
-   Instincts: 3
-   Avg confidence: 82%
-   Domains: testing
-   Scopes: project
+## 技能候选
+1. 集群：「添加测试」
+   Instincts：3
+   平均置信度：82%
+   领域：testing
+   范围：project
 
-## COMMAND CANDIDATES (2)
+## 命令候选（2）
   /adding-tests
-    From: test-first-workflow [project]
-    Confidence: 84%
+    来自：test-first-workflow [project]
+    置信度：84%
 
-## AGENT CANDIDATES (1)
+## 代理候选（1）
   adding-tests-agent
-    Covers 3 instincts
-    Avg confidence: 82%
+    覆盖 3 个 instincts
+    平均置信度：82%
 ```
 
-## Flags
+## 标志
 
-- `--generate`: Generate evolved files in addition to analysis output
+- `--generate`：除了分析输出外，还生成演进的文件
 
-## Generated File Format
+## 生成的文件格式
 
-### Command
+### 命令
 ```markdown
 ---
 name: new-table
@@ -137,14 +140,14 @@ evolved_from:
 
 # New Table Command
 
-[Generated content based on clustered instincts]
+[基于聚类的 instincts 生成的内容]
 
-## Steps
+## 步骤
 1. ...
 2. ...
 ```
 
-### Skill
+### 技能
 ```markdown
 ---
 name: functional-patterns
@@ -157,10 +160,10 @@ evolved_from:
 
 # Functional Patterns Skill
 
-[Generated content based on clustered instincts]
+[基于聚类的 instincts 生成的内容]
 ```
 
-### Agent
+### 代理
 ```markdown
 ---
 name: debugger
@@ -174,5 +177,5 @@ evolved_from:
 
 # Debugger Agent
 
-[Generated content based on clustered instincts]
+[基于聚类的 instincts 生成的内容]
 ```

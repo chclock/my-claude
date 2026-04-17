@@ -1,29 +1,29 @@
-# Quality Gate Command
+# 质量门命令
 
-Run the ECC quality pipeline on demand for a file or project scope.
+按需对文件或项目范围运行 ECC 质量管道。
 
-## Usage
+## 使用方法
 
 `/quality-gate [path|.] [--fix] [--strict]`
 
-- default target: current directory (`.`)
-- `--fix`: allow auto-format/fix where configured
-- `--strict`: fail on warnings where supported
+- 默认目标：当前目录（`.`）
+- `--fix`：在配置的地方允许自动格式化/修复
+- `--strict`：在支持的地方对警告失败
 
-## Pipeline
+## 管道
 
-1. Detect language/tooling for target.
-2. Run formatter checks.
-3. Run lint/type checks when available.
-4. Produce a concise remediation list.
+1. 检测目标的语言/工具链。
+2. 运行格式化程序检查。
+3. 在可用时运行 lint/类型检查。
+4. 生成简短的修复列表。
 
-## Notes
+## 说明
 
-This command mirrors hook behavior but is operator-invoked.
+此命令反映 hook 行为，但由操作员调用。
 
-## Arguments
+## 参数
 
 $ARGUMENTS:
-- `[path|.]` optional target path
-- `--fix` optional
-- `--strict` optional
+- `[path|.]` 可选目标路径
+- `--fix` 可选
+- `--strict` 可选

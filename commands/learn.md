@@ -1,39 +1,43 @@
-# /learn - Extract Reusable Patterns
+---
+description: Analyze the current session and extract any patterns worth saving as skills.
+---
 
-Analyze the current session and extract any patterns worth saving as skills.
+# /learn - 提取可重用模式
 
-## Trigger
+分析当前会话并提取值得保存为技能的任何模式。
 
-Run `/learn` at any point during a session when you've solved a non-trivial problem.
+## 触发条件
 
-## What to Extract
+在会话过程中的任何时刻，当您解决了一个非平凡的问题时，运行 `/learn`。
 
-Look for:
+## 提取什么
 
-1. **Error Resolution Patterns**
-   - What error occurred?
-   - What was the root cause?
-   - What fixed it?
-   - Is this reusable for similar errors?
+寻找：
 
-2. **Debugging Techniques**
-   - Non-obvious debugging steps
-   - Tool combinations that worked
-   - Diagnostic patterns
+1. **错误解决方案模式**
+   - 发生了什么错误？
+   - 根本原因是什么？
+   - 什么修复了它？
+   - 这个模式可以重用以解决类似错误吗？
 
-3. **Workarounds**
-   - Library quirks
-   - API limitations
-   - Version-specific fixes
+2. **调试技术**
+   - 不明显的调试步骤
+   - 有效的工具组合
+   - 诊断模式
 
-4. **Project-Specific Patterns**
-   - Codebase conventions discovered
-   - Architecture decisions made
-   - Integration patterns
+3. **变通方案**
+   - 库怪癖
+   - API 限制
+   - 版本特定修复
 
-## Output Format
+4. **项目特定模式**
+   - 发现的代码库约定
+   - 架构决策
+   - 集成模式
 
-Create a skill file at `~/.claude/skills/learned/[pattern-name].md`:
+## 输出格式
+
+在 `~/.claude/skills/learned/[pattern-name].md` 创建一个技能文件：
 
 ```markdown
 # [Descriptive Pattern Name]
@@ -54,17 +58,17 @@ Create a skill file at `~/.claude/skills/learned/[pattern-name].md`:
 [Trigger conditions - what should activate this skill]
 ```
 
-## Process
+## 流程
 
-1. Review the session for extractable patterns
-2. Identify the most valuable/reusable insight
-3. Draft the skill file
-4. Ask user to confirm before saving
-5. Save to `~/.claude/skills/learned/`
+1. 回顾会话以寻找可提取的模式
+2. 识别最有价值/可重用的见解
+3. 起草技能文件
+4. 保存前询问用户确认
+5. 保存到 `~/.claude/skills/learned/`
 
-## Notes
+## 注意事项
 
-- Don't extract trivial fixes (typos, simple syntax errors)
-- Don't extract one-time issues (specific API outages, etc.)
-- Focus on patterns that will save time in future sessions
-- Keep skills focused - one pattern per skill
+- 不要提取微不足道的修复（拼写错误、简单语法错误）
+- 不要提取一次性问题（特定的 API 中断等）
+- 专注于未来会话中会节省时间的模式
+- 保持技能专注——每个技能一个模式

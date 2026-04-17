@@ -1,90 +1,90 @@
-# Coding Style
+# 编码风格
 
-## Immutability (CRITICAL)
+## 不可变性（关键）
 
-ALWAYS create new objects, NEVER mutate existing ones:
+始终创建新对象，永不变更现有对象：
 
 ```
-// Pseudocode
-WRONG:  modify(original, field, value) → changes original in-place
-CORRECT: update(original, field, value) → returns new copy with change
+// 伪代码
+错误：  modify(original, field, value) → 就地更改原始对象
+正确： update(original, field, value) → 返回带有更改的新副本
 ```
 
-Rationale: Immutable data prevents hidden side effects, makes debugging easier, and enables safe concurrency.
+理由：不可变数据防止隐藏副作用，使调试更容易，并支持安全并发。
 
-## Core Principles
+## 核心原则
 
-### KISS (Keep It Simple)
+### KISS（保持简单）
 
-- Prefer the simplest solution that actually works
-- Avoid premature optimization
-- Optimize for clarity over cleverness
+- 首选实际可行的最简单的解决方案
+- 避免过早优化
+- 优化清晰度而非巧妙
 
-### DRY (Don't Repeat Yourself)
+### DRY（不要重复自己）
 
-- Extract repeated logic into shared functions or utilities
-- Avoid copy-paste implementation drift
-- Introduce abstractions when repetition is real, not speculative
+- 将重复逻辑提取到共享函数或工具中
+- 避免复制粘贴导致的实现漂移
+- 当重复真实存在时引入抽象，而非推测性引入
 
-### YAGNI (You Aren't Gonna Need It)
+### YAGNI（你不需要它）
 
-- Do not build features or abstractions before they are needed
-- Avoid speculative generality
-- Start simple, then refactor when the pressure is real
+- 不要在需要之前构建功能或抽象
+- 避免 speculative 通用性
+- 从简单开始，当压力真实到来时再重构
 
-## File Organization
+## 文件组织
 
-MANY SMALL FILES > FEW LARGE FILES:
-- High cohesion, low coupling
-- 200-400 lines typical, 800 max
-- Extract utilities from large modules
-- Organize by feature/domain, not by type
+多个小文件 > 少量大文件：
+- 高内聚，低耦合
+- 通常 200-400 行，最多 800 行
+- 从大模块中提取工具函数
+- 按功能/领域组织，而非按类型
 
-## Error Handling
+## 错误处理
 
-ALWAYS handle errors comprehensively:
-- Handle errors explicitly at every level
-- Provide user-friendly error messages in UI-facing code
-- Log detailed error context on the server side
-- Never silently swallow errors
+始终全面处理错误：
+- 在每个层级明确处理错误
+- 在面向用户的代码中提供用户友好的错误消息
+- 在服务器端记录详细的错误上下文
+- 绝不静默吞下错误
 
-## Input Validation
+## 输入验证
 
-ALWAYS validate at system boundaries:
-- Validate all user input before processing
-- Use schema-based validation where available
-- Fail fast with clear error messages
-- Never trust external data (API responses, user input, file content)
+始终在系统边界验证：
+- 在处理前验证所有用户输入
+- 在可用时使用基于模式的验证
+- 用清晰的错误消息快速失败
+- 绝不信任外部数据（API 响应、用户输入、文件内容）
 
-## Naming Conventions
+## 命名约定
 
-- Variables and functions: `camelCase` with descriptive names
-- Booleans: prefer `is`, `has`, `should`, or `can` prefixes
-- Interfaces, types, and components: `PascalCase`
-- Constants: `UPPER_SNAKE_CASE`
-- Custom hooks: `camelCase` with a `use` prefix
+- 变量和函数：`camelCase` 并使用描述性名称
+- 布尔值：首选 `is`、`has`、`should` 或 `can` 前缀
+- 接口、类型和组件：`PascalCase`
+- 常量：`UPPER_SNAKE_CASE`
+- 自定义 hooks：`camelCase` 并使用 `use` 前缀
 
-## Code Smells to Avoid
+## 应避免的代码异味
 
-### Deep Nesting
+### 深层嵌套
 
-Prefer early returns over nested conditionals once the logic starts stacking.
+一旦逻辑开始堆叠，首选早期返回而非嵌套条件。
 
-### Magic Numbers
+### 魔法数字
 
-Use named constants for meaningful thresholds, delays, and limits.
+为有意义的阈值、延迟和限制使用命名常量。
 
-### Long Functions
+### 长函数
 
-Split large functions into focused pieces with clear responsibilities.
+将大函数拆分为职责明确的小块。
 
-## Code Quality Checklist
+## 代码质量清单
 
-Before marking work complete:
-- [ ] Code is readable and well-named
-- [ ] Functions are small (<50 lines)
-- [ ] Files are focused (<800 lines)
-- [ ] No deep nesting (>4 levels)
-- [ ] Proper error handling
-- [ ] No hardcoded values (use constants or config)
-- [ ] No mutation (immutable patterns used)
+工作完成前检查：
+- [ ] 代码可读且命名良好
+- [ ] 函数小（<50 行）
+- [ ] 文件专注（<800 行）
+- [ ] 无深层嵌套（>4 层）
+- [ ] 适当的错误处理
+- [ ] 无硬编码值（使用常量或配置）
+- [ ] 无变更（使用不可变模式）

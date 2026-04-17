@@ -2,28 +2,28 @@
 description: Legacy slash-entry shim for the e2e-testing skill. Prefer the skill directly.
 ---
 
-# E2E Command (Legacy Shim)
+# E2E 命令（旧版兼容桥接）
 
-Use this only if you still invoke `/e2e`. The maintained workflow lives in `skills/e2e-testing/SKILL.md`.
+仅在仍然使用 `/e2e` 时使用此命令。主要的工作流程在 `skills/e2e-testing/SKILL.md` 中。
 
-## Canonical Surface
+## 标准入口
 
-- Prefer the `e2e-testing` skill directly.
-- Keep this file only as a compatibility entry point.
+- 请直接使用 `e2e-testing` 技能。
+- 保留此文件仅作为兼容性入口。
 
-## Arguments
+## 参数
 
 `$ARGUMENTS`
 
-## Delegation
+## 委托
 
-Apply the `e2e-testing` skill.
-- Generate or update Playwright coverage for the requested user flow.
-- Run only the relevant tests unless the user explicitly asked for the entire suite.
-- Capture the usual artifacts and report failures, flake risk, and next fixes without duplicating the full skill body here.
+应用 `e2e-testing` 技能。
+- 为请求的用户流程生成或更新 Playwright 覆盖率。
+- 仅运行相关测试，除非用户明确要求运行整个套件。
+- 捕获通常的工件并报告失败、不稳定风险和下一步修复，而不在此处复制完整的技能正文。
     await marketsPage.searchMarkets('xyznonexistentmarket123456')
 
-    // Verify empty state
+    // 验证空状态
     await expect(page.locator('[data-testid="no-results"]')).toBeVisible()
     await expect(page.locator('[data-testid="no-results"]')).toContainText(
       /no.*results|no.*markets/i
@@ -33,36 +33,36 @@ Apply the `e2e-testing` skill.
     expect(marketCount).toBe(0)
   })
 
-  test('can clear search and see all markets again', async ({ page }) => {
+  test('可以清除搜索并再次看到所有市场', async ({ page }) => {
     const marketsPage = new MarketsPage(page)
     await marketsPage.goto()
 
-    // Initial market count
+    // 初始市场计数
     const initialCount = await marketsPage.marketCards.count()
 
-    // Perform search
+    // 执行搜索
     await marketsPage.searchMarkets('trump')
     await page.waitForLoadState('networkidle')
 
-    // Verify filtered results
+    // 验证过滤后的结果
     const filteredCount = await marketsPage.marketCards.count()
     expect(filteredCount).toBeLessThan(initialCount)
 
-    // Clear search
+    // 清除搜索
     await marketsPage.searchInput.clear()
     await page.waitForLoadState('networkidle')
 
-    // Verify all markets shown again
+    // 验证再次显示所有市场
     const finalCount = await marketsPage.marketCards.count()
     expect(finalCount).toBe(initialCount)
   })
 })
 ```
 
-## Running Tests
+## 运行测试
 
 ```bash
-# Run the generated test
+# 运行生成的测试
 npx playwright test tests/e2e/markets/search-and-view.spec.ts
 
 Running 3 tests using 3 workers
@@ -79,7 +79,7 @@ Artifacts generated:
 - playwright-report/index.html
 ```
 
-## Test Report
+## 测试报告
 
 ```
 ╔══════════════════════════════════════════════════════════════╗
@@ -102,71 +102,71 @@ Artifacts:
 View report: npx playwright show-report
 ```
 
-PASS: E2E test suite ready for CI/CD integration!
+通过：E2E 测试套件已准备好集成 CI/CD！
 ```
 
-## Test Artifacts
+## 测试工件
 
-When tests run, the following artifacts are captured:
+测试运行时，会捕获以下工件：
 
-**On All Tests:**
-- HTML Report with timeline and results
-- JUnit XML for CI integration
+**所有测试：**
+- 带时间线和结果的 HTML 报告
+- 用于 CI 集成的 JUnit XML
 
-**On Failure Only:**
-- Screenshot of the failing state
-- Video recording of the test
-- Trace file for debugging (step-by-step replay)
-- Network logs
-- Console logs
+**仅失败时：**
+- 失败状态的截图
+- 测试的视频录制
+- 用于调试的跟踪文件（逐步回放）
+- 网络日志
+- 控制台日志
 
-## Viewing Artifacts
+## 查看工件
 
 ```bash
-# View HTML report in browser
+# 在浏览器中查看 HTML 报告
 npx playwright show-report
 
-# View specific trace file
+# 查看特定的跟踪文件
 npx playwright show-trace artifacts/trace-abc123.zip
 
-# Screenshots are saved in artifacts/ directory
+# 截图保存在 artifacts/ 目录中
 open artifacts/search-results.png
 ```
 
-## Flaky Test Detection
+## 不稳定测试检测
 
-If a test fails intermittently:
+如果测试间歇性失败：
 
 ```
-WARNING:  FLAKY TEST DETECTED: tests/e2e/markets/trade.spec.ts
+警告：检测到不稳定的测试：tests/e2e/markets/trade.spec.ts
 
-Test passed 7/10 runs (70% pass rate)
+测试通过 7/10 次（70% 通过率）
 
-Common failure:
-"Timeout waiting for element '[data-testid="confirm-btn"]'"
+常见失败：
+"等待元素 '[data-testid="confirm-btn"]' 超时"
 
-Recommended fixes:
-1. Add explicit wait: await page.waitForSelector('[data-testid="confirm-btn"]')
-2. Increase timeout: { timeout: 10000 }
-3. Check for race conditions in component
-4. Verify element is not hidden by animation
+建议的修复：
+1. 添加显式等待：await page.waitForSelector('[data-testid="confirm-btn"]')
+2. 增加超时：{ timeout: 10000 }
+3. 检查组件中的竞态条件
+4. 验证元素没有被动画隐藏
 
-Quarantine recommendation: Mark as test.fixme() until fixed
+隔离建议：标记为 test.fixme() 直到修复
 ```
 
-## Browser Configuration
+## 浏览器配置
 
-Tests run on multiple browsers by default:
-- PASS: Chromium (Desktop Chrome)
-- PASS: Firefox (Desktop)
-- PASS: WebKit (Desktop Safari)
-- PASS: Mobile Chrome (optional)
+默认情况下，测试在多个浏览器上运行：
+- 通过：Chromium（桌面 Chrome）
+- 通过：Firefox（桌面）
+- 通过：WebKit（桌面 Safari）
+- 通过：移动版 Chrome（可选）
 
-Configure in `playwright.config.ts` to adjust browsers.
+在 `playwright.config.ts` 中配置以调整浏览器。
 
-## CI/CD Integration
+## CI/CD 集成
 
-Add to your CI pipeline:
+添加到您的 CI 管道：
 
 ```yaml
 # .github/workflows/e2e.yml
@@ -184,85 +184,85 @@ Add to your CI pipeline:
     path: playwright-report/
 ```
 
-## PMX-Specific Critical Flows
+## PMX 特定的关键流程
 
-For PMX, prioritize these E2E tests:
+对于 PMX，优先考虑这些 E2E 测试：
 
-**CRITICAL (Must Always Pass):**
-1. User can connect wallet
-2. User can browse markets
-3. User can search markets (semantic search)
-4. User can view market details
-5. User can place trade (with test funds)
-6. Market resolves correctly
-7. User can withdraw funds
+**关键（必须始终通过）：**
+1. 用户可以连接钱包
+2. 用户可以浏览市场
+3. 用户可以搜索市场（语义搜索）
+4. 用户可以查看市场详情
+5. 用户可以下单（使用测试资金）
+6. 市场正确结算
+7. 用户可以提取资金
 
-**IMPORTANT:**
-1. Market creation flow
-2. User profile updates
-3. Real-time price updates
-4. Chart rendering
-5. Filter and sort markets
-6. Mobile responsive layout
+**重要：**
+1. 市场创建流程
+2. 用户资料更新
+3. 实时价格更新
+4. 图表渲染
+5. 过滤和排序市场
+6. 移动端响应式布局
 
-## Best Practices
+## 最佳实践
 
-**DO:**
-- PASS: Use Page Object Model for maintainability
-- PASS: Use data-testid attributes for selectors
-- PASS: Wait for API responses, not arbitrary timeouts
-- PASS: Test critical user journeys end-to-end
-- PASS: Run tests before merging to main
-- PASS: Review artifacts when tests fail
+**要做：**
+- 通过：使用页面对象模型以提高可维护性
+- 通过：使用 data-testid 属性作为选择器
+- 通过：等待 API 响应，而不是任意超时
+- 通过：端到端测试关键用户旅程
+- 通过：合并到主分支前运行测试
+- 通过：测试失败时审查工件
 
-**DON'T:**
-- FAIL: Use brittle selectors (CSS classes can change)
-- FAIL: Test implementation details
-- FAIL: Run tests against production
-- FAIL: Ignore flaky tests
-- FAIL: Skip artifact review on failures
-- FAIL: Test every edge case with E2E (use unit tests)
+**不要做：**
+- 失败：使用脆弱的选择器（CSS 类可能会改变）
+- 失败：测试实现细节
+- 失败：在生产环境运行测试
+- 失败：忽略不稳定的测试
+- 失败：跳过失败时的工件审查
+- 失败：使用 E2E 测试每个边缘情况（使用单元测试）
 
-## Important Notes
+## 重要说明
 
-**CRITICAL for PMX:**
-- E2E tests involving real money MUST run on testnet/staging only
-- Never run trading tests against production
-- Set `test.skip(process.env.NODE_ENV === 'production')` for financial tests
-- Use test wallets with small test funds only
+**PMX 的关键点：**
+- 涉及真实资金的 E2E 测试必须仅在 testnet/staging 上运行
+- 切勿在生产环境运行交易测试
+- 为金融测试设置 `test.skip(process.env.NODE_ENV === 'production')`
+- 仅使用带有少量测试资金的测试钱包
 
-## Integration with Other Commands
+## 与其他命令的集成
 
-- Use `/plan` to identify critical journeys to test
-- Use `/tdd` for unit tests (faster, more granular)
-- Use `/e2e` for integration and user journey tests
-- Use `/code-review` to verify test quality
+- 使用 `/plan` 识别要测试的关键旅程
+- 使用 `/tdd` 进行单元测试（更快、更细粒度）
+- 使用 `/e2e` 进行集成和用户旅程测试
+- 使用 `/code-review` 验证测试质量
 
-## Related Agents
+## 相关代理
 
-This command invokes the `e2e-runner` agent provided by ECC.
+此命令调用 ECC 提供的 `e2e-runner` 代理。
 
-For manual installs, the source file lives at:
+对于手动安装，源文件位于：
 `agents/e2e-runner.md`
 
-## Quick Commands
+## 快速命令
 
 ```bash
-# Run all E2E tests
+# 运行所有 E2E 测试
 npx playwright test
 
-# Run specific test file
+# 运行特定的测试文件
 npx playwright test tests/e2e/markets/search.spec.ts
 
-# Run in headed mode (see browser)
+# 在有头模式下运行（可见浏览器）
 npx playwright test --headed
 
-# Debug test
+# 调试测试
 npx playwright test --debug
 
-# Generate test code
+# 生成测试代码
 npx playwright codegen http://localhost:3000
 
-# View report
+# 查看报告
 npx playwright show-report
 ```

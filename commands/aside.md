@@ -2,163 +2,162 @@
 description: Answer a quick side question without interrupting or losing context from the current task. Resume work automatically after answering.
 ---
 
-# Aside Command
+# 侧边栏命令
 
-Ask a question mid-task and get an immediate, focused answer — then continue right where you left off. The current task, files, and context are never modified.
+在任务进行中提出一个问题，获得即时、针对性的回答——然后立即从中断处继续。当前任务、文件和上下文永远不会改变。
 
-## When to Use
+## 使用场景
 
-- You're curious about something while Claude is working and don't want to lose momentum
-- You need a quick explanation of code Claude is currently editing
-- You want a second opinion or clarification on a decision without derailing the task
-- You need to understand an error, concept, or pattern before Claude proceeds
-- You want to ask something unrelated to the current task without starting a new session
+- 当克劳德正在工作时你好奇某个问题，不想失去动力
+- 你需要克劳德正在编辑的代码的快速解释
+- 你想在不中断任务的情况下获得关于某个决定的第二意见或澄清
+- 你需要在克劳德继续之前理解一个错误、概念或模式
+- 你想提出与当前任务无关的问题而不开启新会话
 
-## Usage
-
-```
-/aside <your question>
-/aside what does this function actually return?
-/aside is this pattern thread-safe?
-/aside why are we using X instead of Y here?
-/aside what's the difference between foo() and bar()?
-/aside should we be worried about the N+1 query we just added?
-```
-
-## Process
-
-### Step 1: Freeze the current task state
-
-Before answering anything, mentally note:
-- What is the active task? (what file, feature, or problem was being worked on)
-- What step was in progress at the moment `/aside` was invoked?
-- What was about to happen next?
-
-Do NOT touch, edit, create, or delete any files during the aside.
-
-### Step 2: Answer the question directly
-
-Answer the question in the most concise form that is still complete and useful.
-
-- Lead with the answer, not the reasoning
-- Keep it short — if a full explanation is needed, offer to go deeper after the task
-- If the question is about the current file or code being worked on, reference it precisely (file path and line number if relevant)
-- If answering requires reading a file, read it — but read only, never write
-
-Format the response as:
+## 使用方法
 
 ```
-ASIDE: [restate the question briefly]
-
-[Your answer here]
-
-— Back to task: [one-line description of what was being done]
+/aside <你的问题>
+/aside 这个函数实际返回什么？
+/aside 这个模式是线程安全的吗？
+/aside 为什么这里用 X 而不是 Y？
+/aside foo() 和 bar() 有什么区别？
+/aside 我们需要担心刚才添加的 N+1 查询问题吗？
 ```
 
-### Step 3: Resume the main task
+## 处理流程
 
-After delivering the answer, immediately continue the active task from the exact point it was paused. Do not ask for permission to resume unless the aside answer revealed a blocker or a reason to reconsider the current approach (see Edge Cases).
+### 第一步：冻结当前任务状态
+
+在回答任何问题之前，先在脑海中记下：
+- 当前活动任务是什么？（正在处理哪个文件、功能或问题）
+- 调用 `/aside` 时进行到哪一步了？
+- 接下来要发生什么？
+
+在侧边栏期间**不要**触碰、编辑、创建或删除任何文件。
+
+### 第二步：直接回答问题
+
+以最简洁但完整有用的形式回答问题。
+
+- 先给答案，再说推理
+- 保持简短——如果需要完整解释，请在任务完成后提供更深入的说明
+- 如果问题涉及当前正在处理的文件或代码，请精确引用（如果相关，提供文件路径和行号）
+- 如果回答需要读取文件，请阅读——但仅限读取，绝不写入
+
+按以下格式回复：
+
+```
+ASIDE：[简要重述问题]
+
+[你的回答]
+
+— 回到任务：[正在做的事情的一行描述]
+```
+
+### 第三步：恢复主要任务
+
+在给出答案后，立即从暂停的确切位置继续活动任务。除非侧边栏回答揭示了阻碍或需要重新考虑当前方法的原因（参见边缘情况），否则不要询问是否恢复。
 
 ---
 
-## Edge Cases
+## 边缘情况
 
-**No question provided (`/aside` with nothing after it):**
-Respond:
+**未提供问题（`/aside` 后面没有任何内容）：**
+回复：
 ```
-ASIDE: no question provided
+ASIDE：未提供问题
 
-What would you like to know? (ask your question and I'll answer without losing the current task context)
+你想知道什么？（提出你的问题，我会回答且不会丢失当前任务上下文）
 
-— Back to task: [one-line description of what was being done]
-```
-
-**Question reveals a potential problem with the current task:**
-Flag it clearly before resuming:
-```
-ASIDE: [answer]
-
-WARNING: Note: This answer suggests [issue] with the current approach. Want to address this before continuing, or proceed as planned?
-```
-Wait for the user's decision before resuming.
-
-**Question is actually a task redirect (not a side question):**
-If the question implies changing what is being built (e.g., `/aside actually, let's use Redis instead`), clarify:
-```
-ASIDE: That sounds like a direction change, not just a side question.
-Do you want to:
-  (a) Answer this as information only and keep the current plan
-  (b) Pause the current task and change approach
-```
-Wait for the user's answer — do not make assumptions.
-
-**Question is about the currently open file or code:**
-Answer from the live context. If the file was read earlier in the session, reference it directly. If not, read it now (read-only) and answer with a file:line reference.
-
-**No active task (nothing in progress when `/aside` is invoked):**
-Still use the standard wrapper so the response shape stays consistent:
-```
-ASIDE: [restate the question briefly]
-
-[Your answer here]
-
-— Back to task: no active task to resume
+— 回到任务：[正在做的事情的一行描述]
 ```
 
-**Question requires a long answer:**
-Give the essential answer concisely, then offer:
+**问题揭示了当前任务的潜在问题：**
+在恢复之前清楚地标记：
 ```
-That's the short version. Want a deeper explanation after we finish [current task]?
+ASIDE：[回答]
+
+警告：注意：此答案暗示当前方法存在[问题]。是想现在处理，还是继续按计划进行？
+```
+等待用户的决定后再恢复。
+
+**问题实际上是任务重定向（不是侧边问题）：**
+如果问题暗示要更改正在构建的内容（例如 `/aside 实际上，我们用 Redis 吧`），请澄清：
+```
+ASIDE：这听起来像是方向改变，而不仅仅是侧边问题。
+你想：
+  （a）仅将这个作为信息回答，保持当前计划
+  （b）暂停当前任务并改变方法
+```
+等待用户的回答——不要做假设。
+
+**问题涉及当前打开的文件或代码：**
+从实时上下文回答。如果文件在会话早期已读取，请直接引用。如果没有，请现在读取（只读）并用 file:line 引用回答。
+
+**没有活动任务（调用 `/aside` 时没有任何进行中的内容）：**
+仍使用标准包装器以保持响应形状一致：
+```
+ASIDE：[简要重述问题]
+
+[你的回答]
+
+— 回到任务：没有需要恢复的活动任务
 ```
 
-**Multiple `/aside` questions in a row:**
-Answer each one in sequence. After the last answer, resume the main task. Do not lose task state across a chain of asides.
-
-**Aside answer implies a code change is needed:**
-Note the change needed but do not make it during the aside:
+**问题需要长回答：**
+简洁地给出基本答案，然后：
 ```
-ASIDE: [answer]
-
- Worth fixing: [what should be changed]. I'll flag this after the current task unless you want to address it now.
+这是简短版本。完成后想要更深入的解释吗？[当前任务]
 ```
 
-**Question is ambiguous or too vague:**
-Ask one clarifying question — the shortest question that gets the information needed to answer. Do not ask multiple questions.
+**连续多个 `/aside` 问题：**
+按顺序回答每个问题。在最后一个答案之后，恢复主要任务。在一系列侧边栏中不要丢失任务状态。
+
+**侧边栏回答暗示需要代码更改：**
+记下需要更改的内容，但在侧边栏期间不要进行更改：
+```
+ASIDE：[回答]
+
+值得修复：[应该更改的内容]。除非你想现在处理，否则我会在当前任务之后标记这个。
+```
+
+**问题模糊或太宽泛：**
+问一个澄清问题——能获得回答问题所需信息的最短问题。不要问多个问题。
 
 ---
 
-## Example Output
+## 示例输出
 
 ```
-User: /aside what does fetchWithRetry() actually do?
+用户：/aside fetchWithRetry() 实际是做什么的？
 
-ASIDE: what does fetchWithRetry() do?
+ASIDE：fetchWithRetry() 是做什么的？
 
-fetchWithRetry() (src/api/retry.ts:12) attempts the request up to 3 times with
-exponential backoff (250ms → 500ms → 1s). It only retries on 5xx responses and
-network errors — 4xx errors are treated as final and not retried.
+fetchWithRetry()（src/api/retry.ts:12）最多尝试请求 3 次，使用指数退避（250ms → 500ms → 1s）。
+它只重试 5xx 响应和网络错误——4xx 错误被视为最终结果，不会重试。
 
-— Back to task: refactoring the auth middleware in src/middleware/auth.ts
+— 回到任务：在 src/middleware/auth.ts 中重构 auth 中间件
 ```
 
 ```
-User: /aside is the approach we're taking thread-safe?
+用户：/aside 我们采用的方法是线程安全的吗？
 
-ASIDE: is the current approach thread-safe?
+ASIDE：当前方法是线程安全的吗？
 
-No — the shared cache object in src/cache/store.ts:34 is mutated without locking.
-Under concurrent requests this is a race condition. It's low risk in a single-process
-Node.js server but would be a real problem with worker threads or clustering.
+不——src/cache/store.ts:34 中的共享缓存对象在没有锁定的情况下被变更。
+在并发请求下，这是一个竞态条件。在单进程 Node.js 服务器中风险较低，但在使用
+工作线程或集群时会是真正的问题。
 
-WARNING: Note: This could affect the feature we're building. Want to address this now or continue and fix it in a follow-up?
+警告：注意：这可能会影响我们正在构建的功能。想现在处理，还是在后续修复？
 ```
 
 ---
 
-## Notes
+## 注意事项
 
-- Never modify files during an aside — read-only access only
-- The aside is a conversation pause, not a new task — the original task must always resume
-- Keep answers focused: the goal is to unblock the user quickly, not to deliver a lecture
-- If an aside sparks a larger discussion, finish the current task first unless the aside reveals a blocker
-- Asides are not saved to session files unless explicitly relevant to the task outcome
+- 侧边栏期间绝不修改文件——仅限只读访问
+- 侧边栏是会话暂停，不是新任务——原始任务必须始终恢复
+- 保持回答聚焦：目标是快速解除用户的阻碍，而不是做讲座
+- 如果侧边栏引发更广泛的讨论，先完成当前任务，除非侧边栏揭示了阻碍
+- 除非与任务结果明确相关，否则侧边栏不会保存到会话文件
