@@ -1,14 +1,14 @@
-> This file extends [common/hooks.md](../common/hooks.md) with web-specific hook recommendations.
+> 本文件通过 Web 特定的 hook 建议扩展了 [common/hooks.md](../common/hooks.md)。
 
 # Web Hooks
 
-## Recommended PostToolUse Hooks
+## 推荐的 PostToolUse Hooks
 
-Prefer project-local tooling. Do not wire hooks to remote one-off package execution.
+优先使用项目本地工具。不要将 hooks 连接到远程一次性包执行。
 
-### Format on Save
+### 保存时格式化
 
-Use the project's existing formatter entrypoint after edits:
+在编辑后使用项目现有的格式化入口点：
 
 ```json
 {
@@ -17,16 +17,16 @@ Use the project's existing formatter entrypoint after edits:
       {
         "matcher": "Write|Edit",
         "command": "pnpm prettier --write \"$FILE_PATH\"",
-        "description": "Format edited frontend files"
+        "description": "格式化编辑的前端文件"
       }
     ]
   }
 }
 ```
 
-Equivalent local commands via `yarn prettier` or `npm exec prettier --` are fine when they use repo-owned dependencies.
+当使用 repo 拥有的依赖时，通过 `yarn prettier` 或 `npm exec prettier --` 的等价本地命令也可以。
 
-### Lint Check
+### Lint 检查
 
 ```json
 {
@@ -35,14 +35,14 @@ Equivalent local commands via `yarn prettier` or `npm exec prettier --` are fine
       {
         "matcher": "Write|Edit",
         "command": "pnpm eslint --fix \"$FILE_PATH\"",
-        "description": "Run ESLint on edited frontend files"
+        "description": "在编辑的前端文件上运行 ESLint"
       }
     ]
   }
 }
 ```
 
-### Type Check
+### 类型检查
 
 ```json
 {
@@ -51,7 +51,7 @@ Equivalent local commands via `yarn prettier` or `npm exec prettier --` are fine
       {
         "matcher": "Write|Edit",
         "command": "pnpm tsc --noEmit --pretty false",
-        "description": "Type-check after frontend edits"
+        "description": "前端编辑后进行类型检查"
       }
     ]
   }
@@ -67,7 +67,7 @@ Equivalent local commands via `yarn prettier` or `npm exec prettier --` are fine
       {
         "matcher": "Write|Edit",
         "command": "pnpm stylelint --fix \"$FILE_PATH\"",
-        "description": "Lint edited stylesheets"
+        "description": "Lint 编辑的样式表"
       }
     ]
   }
@@ -76,9 +76,9 @@ Equivalent local commands via `yarn prettier` or `npm exec prettier --` are fine
 
 ## PreToolUse Hooks
 
-### Guard File Size
+### 守护文件大小
 
-Block oversized writes from tool input content, not from a file that may not exist yet:
+从工具输入内容阻止过大写入，而非从可能尚不存在的文件：
 
 ```json
 {
@@ -87,7 +87,7 @@ Block oversized writes from tool input content, not from a file that may not exi
       {
         "matcher": "Write",
         "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const i=JSON.parse(d);const c=i.tool_input?.content||'';const lines=c.split('\\n').length;if(lines>800){console.error('[Hook] BLOCKED: File exceeds 800 lines ('+lines+' lines)');console.error('[Hook] Split into smaller modules');process.exit(2)}console.log(d)})\"",
-        "description": "Block writes that exceed 800 lines"
+        "description": "阻止超过 800 行的写入"
       }
     ]
   }
@@ -96,7 +96,7 @@ Block oversized writes from tool input content, not from a file that may not exi
 
 ## Stop Hooks
 
-### Final Build Verification
+### 最终构建验证
 
 ```json
 {
@@ -104,17 +104,17 @@ Block oversized writes from tool input content, not from a file that may not exi
     "Stop": [
       {
         "command": "pnpm build",
-        "description": "Verify the production build at session end"
+        "description": "在会话结束时验证生产构建"
       }
     ]
   }
 }
 ```
 
-## Ordering
+## 顺序
 
-Recommended order:
-1. format
-2. lint
-3. type check
-4. build verification
+推荐顺序：
+1. 格式化
+2. Lint
+3. 类型检查
+4. 构建验证

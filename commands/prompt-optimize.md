@@ -2,22 +2,22 @@
 description: Legacy slash-entry shim for the prompt-optimizer skill. Prefer the skill directly.
 ---
 
-# Prompt Optimize (Legacy Shim)
+# Prompt Optimize（传统兼容层）
 
-Use this only if you still invoke `/prompt-optimize`. The maintained workflow lives in `skills/prompt-optimizer/SKILL.md`.
+如果您仍在使用 `/prompt-optimize`，请使用此命令。主要的工作流程位于 `skills/prompt-optimizer/SKILL.md`。
 
-## Canonical Surface
+## 标准入口
 
-- Prefer the `prompt-optimizer` skill directly.
-- Keep this file only as a compatibility entry point.
+- 直接使用 `prompt-optimizer` skill。
+- 仅将此文件作为兼容性入口保留。
 
-## Arguments
+## 参数
 
 `$ARGUMENTS`
 
-## Delegation
+## 委托
 
-Apply the `prompt-optimizer` skill.
-- Keep it advisory-only: optimize the prompt, do not execute the task.
-- Return the recommended ECC components plus a ready-to-run prompt.
-- If the user actually wants direct execution, say so and tell them to make a normal task request instead of staying inside the shim.
+应用 `prompt-optimizer` skill。
+- 仅提供建议：优化提示词，不执行任务。
+- 返回推荐的 ECC 组件以及可直接使用的提示词。
+- 如果用户实际想要直接执行，请说明情况并告诉他们改用普通任务请求，而不是继续停留在兼容层中。

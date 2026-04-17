@@ -2,23 +2,25 @@
 description: Get help with the hookify system
 ---
 
-Display comprehensive hookify documentation.
+# Hookify 帮助
 
-## Hook System Overview
+显示全面的 hookify 文档。
 
-Hookify creates rule files that integrate with Claude Code's hook system to prevent unwanted behaviors.
+## Hook 系统概述
 
-### Event Types
+Hookify 创建规则文件，与 Claude Code 的 hook 系统集成，以防止不良行为。
 
-- `bash`: triggers on Bash tool use and matches command patterns
-- `file`: triggers on Write/Edit tool use and matches file paths
-- `stop`: triggers when a session ends
-- `prompt`: triggers on user message submission and matches input patterns
-- `all`: triggers on all events
+### 事件类型
 
-### Rule File Format
+- `bash`：在 Bash 工具使用时触发，匹配命令模式
+- `file`：在 Write/Edit 工具使用时触发，匹配文件路径
+- `stop`：在会话结束时触发
+- `prompt`：在用户消息提交时触发，匹配输入模式
+- `all`：在所有事件上触发
 
-Files are stored as `.claude/hookify.{name}.local.md`:
+### 规则文件格式
+
+文件存储为 `.claude/hookify.{name}.local.md`：
 
 ```yaml
 ---
@@ -32,15 +34,15 @@ Message to display when rule triggers.
 Supports multiple lines.
 ```
 
-### Commands
+### 命令
 
-- `/hookify [description]` creates new rules and auto-analyzes the conversation when no description is given
-- `/hookify-list` lists configured rules
-- `/hookify-configure` toggles rules on or off
+- `/hookify [description]` 创建新规则，未提供描述时自动分析对话
+- `/hookify-list` 列出已配置的规则
+- `/hookify-configure` 开启或关闭规则
 
-### Pattern Tips
+### 模式提示
 
-- use regex syntax
-- for `bash`, match against the full command string
-- for `file`, match against the file path
-- test patterns before deploying
+- 使用正则表达式语法
+- 对于 `bash`，匹配完整命令字符串
+- 对于 `file`，匹配文件路径
+- 部署前测试模式

@@ -4,38 +4,38 @@ description: Promote project-scoped instincts to global scope
 command: true
 ---
 
-# Promote Command
+# Promote 命令
 
-Promote instincts from project scope to global scope in continuous-learning-v2.
+将 instincts 从项目范围提升到 continuous-learning-v2 的全局范围。
 
-## Implementation
+## 实现方式
 
-Run the instinct CLI using the plugin root path:
+使用插件根路径运行 instinct CLI：
 
 ```bash
 python3 "${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py" promote [instinct-id] [--force] [--dry-run]
 ```
 
-Or if `CLAUDE_PLUGIN_ROOT` is not set (manual installation):
+或者如果未设置 `CLAUDE_PLUGIN_ROOT`（手动安装）：
 
 ```bash
 python3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py promote [instinct-id] [--force] [--dry-run]
 ```
 
-## Usage
+## 使用方法
 
 ```bash
-/promote                      # Auto-detect promotion candidates
-/promote --dry-run            # Preview auto-promotion candidates
-/promote --force              # Promote all qualified candidates without prompt
-/promote grep-before-edit     # Promote one specific instinct from current project
+/promote                      # 自动检测可提升的候选项
+/promote --dry-run            # 预览自动提升候选项
+/promote --force              # 无需确认即提升所有符合条件的候选项
+/promote grep-before-edit     # 从当前项目提升某个特定的 instinct
 ```
 
-## What to Do
+## 执行步骤
 
-1. Detect current project
-2. If `instinct-id` is provided, promote only that instinct (if present in current project)
-3. Otherwise, find cross-project candidates that:
-   - Appear in at least 2 projects
-   - Meet confidence threshold
-4. Write promoted instincts to `~/.claude/homunculus/instincts/personal/` with `scope: global`
+1. 检测当前项目
+2. 如果提供了 `instinct-id`，则仅提升该 instinct（如果存在于当前项目中）
+3. 否则，查找跨项目候选项，符合以下条件：
+   - 出现在至少 2 个项目中
+   - 达到置信度阈值
+4. 将提升的 instincts 写入 `~/.claude/homunculus/instincts/personal/`，设置 `scope: global`

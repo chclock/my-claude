@@ -1,84 +1,88 @@
-# Update Documentation
+---
+description: Sync documentation with the codebase, generating from source-of-truth files.
+---
 
-Sync documentation with the codebase, generating from source-of-truth files.
+# 更新文档
 
-## Step 1: Identify Sources of Truth
+将文档与代码库同步，从事实来源文件生成。
 
-| Source | Generates |
+## 步骤 1: 识别事实来源
+
+| 来源 | 生成 |
 |--------|-----------|
-| `package.json` scripts | Available commands reference |
-| `.env.example` | Environment variable documentation |
-| `openapi.yaml` / route files | API endpoint reference |
-| Source code exports | Public API documentation |
-| `Dockerfile` / `docker-compose.yml` | Infrastructure setup docs |
+| `package.json` 脚本 | 可用命令参考 |
+| `.env.example` | 环境变量文档 |
+| `openapi.yaml` / 路由文件 | API 端点参考 |
+| 源代码导出 | 公共 API 文档 |
+| `Dockerfile` / `docker-compose.yml` | 基础设施设置文档 |
 
-## Step 2: Generate Script Reference
+## 步骤 2: 生成脚本参考
 
-1. Read `package.json` (or `Makefile`, `Cargo.toml`, `pyproject.toml`)
-2. Extract all scripts/commands with their descriptions
-3. Generate a reference table:
+1. 读取 `package.json`（或 `Makefile`、`Cargo.toml`、`pyproject.toml`）
+2. 提取所有脚本及其描述
+3. 生成参考表：
 
 ```markdown
-| Command | Description |
+| 命令 | 描述 |
 |---------|-------------|
-| `npm run dev` | Start development server with hot reload |
-| `npm run build` | Production build with type checking |
-| `npm test` | Run test suite with coverage |
+| `npm run dev` | 启动带热重载的开发服务器 |
+| `npm run build` | 带类型检查的生产构建 |
+| `npm test` | 带覆盖率的运行测试套件 |
 ```
 
-## Step 3: Generate Environment Documentation
+## 步骤 3: 生成环境文档
 
-1. Read `.env.example` (or `.env.template`, `.env.sample`)
-2. Extract all variables with their purposes
-3. Categorize as required vs optional
-4. Document expected format and valid values
+1. 读取 `.env.example`（或 `.env.template`、`.env.sample`）
+2. 提取所有变量及其用途
+3. 分类为必需 vs 可选
+4. 记录预期格式和有效值
 
 ```markdown
-| Variable | Required | Description | Example |
+| 变量 | 必需 | 描述 | 示例 |
 |----------|----------|-------------|---------|
-| `DATABASE_URL` | Yes | PostgreSQL connection string | `postgres://user:pass@host:5432/db` |
-| `LOG_LEVEL` | No | Logging verbosity (default: info) | `debug`, `info`, `warn`, `error` |
+| `DATABASE_URL` | 是 | PostgreSQL 连接字符串 | `postgres://user:pass@host:5432/db` |
+| `LOG_LEVEL` | 否 | 日志详细程度（默认：info） | `debug`, `info`, `warn`, `error` |
 ```
 
-## Step 4: Update Contributing Guide
+## 步骤 4: 更新贡献指南
 
-Generate or update `docs/CONTRIBUTING.md` with:
-- Development environment setup (prerequisites, install steps)
-- Available scripts and their purposes
-- Testing procedures (how to run, how to write new tests)
-- Code style enforcement (linter, formatter, pre-commit hooks)
-- PR submission checklist
+生成或更新 `docs/CONTRIBUTING.md`，包含：
+- 开发环境设置（前提条件、安装步骤）
+- 可用脚本及其用途
+- 测试程序（如何运行、如何编写新测试）
+- 代码风格强制（linter、formatter、pre-commit hooks）
+- PR 提交检查清单
 
-## Step 5: Update Runbook
+## 步骤 5: 更新运行手册
 
-Generate or update `docs/RUNBOOK.md` with:
-- Deployment procedures (step-by-step)
-- Health check endpoints and monitoring
-- Common issues and their fixes
-- Rollback procedures
-- Alerting and escalation paths
+生成或更新 `docs/RUNBOOK.md`，包含：
+- 部署程序（逐步）
+- 健康检查端点和监控
+- 常见问题及其修复
+- 回滚程序
+- 告警和升级路径
 
-## Step 6: Staleness Check
+## 步骤 6: 陈旧度检查
 
-1. Find documentation files not modified in 90+ days
-2. Cross-reference with recent source code changes
-3. Flag potentially outdated docs for manual review
+1. 查找 90+ 天未修改的文档文件
+2. 与最近的源代码更改进行交叉引用
+3. 标记可能过时的文档进行手动审查
 
-## Step 7: Show Summary
+## 步骤 7: 显示摘要
 
 ```
-Documentation Update
+文档更新
 ──────────────────────────────
-Updated:  docs/CONTRIBUTING.md (scripts table)
-Updated:  docs/ENV.md (3 new variables)
-Flagged:  docs/DEPLOY.md (142 days stale)
-Skipped:  docs/API.md (no changes detected)
+更新：docs/CONTRIBUTING.md（脚本表）
+更新：docs/ENV.md（3 个新变量）
+标记：docs/DEPLOY.md（142 天过时）
+跳过：docs/API.md（未检测到更改）
 ──────────────────────────────
 ```
 
-## Rules
+## 规则
 
-- **Single source of truth**: Always generate from code, never manually edit generated sections
-- **Preserve manual sections**: Only update generated sections; leave hand-written prose intact
-- **Mark generated content**: Use `<!-- AUTO-GENERATED -->` markers around generated sections
-- **Don't create docs unprompted**: Only create new doc files if the command explicitly requests it
+- **单一事实来源**：始终从代码生成，切勿手动编辑生成的部分
+- **保留手动部分**：仅更新生成的部分；保留手写的散文完整
+- **标记生成内容**：在生成的部分周围使用 `<!-- AUTO-GENERATED -->` 标记
+- **不要主动创建文档**：仅在命令明确要求时才创建新文档文件

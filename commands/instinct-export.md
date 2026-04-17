@@ -4,36 +4,36 @@ description: Export instincts from project/global scope to a file
 command: /instinct-export
 ---
 
-# Instinct Export Command
+# Instinct 导出命令
 
-Exports instincts to a shareable format. Perfect for:
-- Sharing with teammates
-- Transferring to a new machine
-- Contributing to project conventions
+将 instincts 导出为可共享的格式。非常适合：
+- 与队友分享
+- 转移到新机器
+- 为项目约定做贡献
 
-## Usage
+## 用法
 
 ```
-/instinct-export                           # Export all personal instincts
-/instinct-export --domain testing          # Export only testing instincts
-/instinct-export --min-confidence 0.7      # Only export high-confidence instincts
+/instinct-export                           # 导出所有个人 instincts
+/instinct-export --domain testing          # 仅导出 testing 相关的 instincts
+/instinct-export --min-confidence 0.7      # 仅导出高置信度的 instincts
 /instinct-export --output team-instincts.yaml
 /instinct-export --scope project --output project-instincts.yaml
 ```
 
-## What to Do
+## 做什么
 
-1. Detect current project context
-2. Load instincts by selected scope:
-   - `project`: current project only
-   - `global`: global only
-   - `all`: project + global merged (default)
-3. Apply filters (`--domain`, `--min-confidence`)
-4. Write YAML-style export to file (or stdout if no output path provided)
+1. 检测当前项目上下文
+2. 按选定范围加载 instincts：
+   - `project`：仅当前项目
+   - `global`：仅全局
+   - `all`：项目 + 全局合并（默认）
+3. 应用过滤器（`--domain`、`--min-confidence`）
+4. 将 YAML 格式导出写入文件（如果没有提供输出路径则写入 stdout）
 
-## Output Format
+## 输出格式
 
-Creates a YAML file:
+创建一个 YAML 文件：
 
 ```yaml
 # Instincts Export
@@ -58,9 +58,9 @@ project_name: my-app
 Use functional patterns over classes.
 ```
 
-## Flags
+## 标志
 
-- `--domain <name>`: Export only specified domain
-- `--min-confidence <n>`: Minimum confidence threshold
-- `--output <file>`: Output file path (prints to stdout when omitted)
-- `--scope <project|global|all>`: Export scope (default: `all`)
+- `--domain <name>`：仅导出指定域
+- `--min-confidence <n>`：最低置信度阈值
+- `--output <file>`：输出文件路径（省略时打印到 stdout）
+- `--scope <project|global|all>`：导出范围（默认：`all`）

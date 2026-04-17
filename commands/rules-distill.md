@@ -1,20 +1,20 @@
 ---
-description: Legacy slash-entry shim for the rules-distill skill. Prefer the skill directly.
+description: Rules Distill 技能的旧版命令入口兼容层。请直接使用该技能。
 ---
 
-# Rules Distill (Legacy Shim)
+# Rules Distill（旧版兼容入口）
 
-Use this only if you still invoke `/rules-distill`. The maintained workflow lives in `skills/rules-distill/SKILL.md`.
+仅在您仍在调用 `/rules-distill` 时使用此文件。主要的工作流程位于 `skills/rules-distill/SKILL.md`。
 
-## Canonical Surface
+## 规范入口
 
-- Prefer the `rules-distill` skill directly.
-- Keep this file only as a compatibility entry point.
+- 请直接使用 `rules-distill` 技能。
+- 仅保留此文件作为兼容性入口点。
 
-## Arguments
+## 参数
 
 `$ARGUMENTS`
 
-## Delegation
+## 委托
 
-Apply the `rules-distill` skill and follow its inventory, cross-read, and verdict workflow instead of duplicating that logic here.
+应用 `rules-distill` 技能并遵循其清单、交叉阅读和裁决工作流程，而不是在此处重复该逻辑。

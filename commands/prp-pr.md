@@ -3,22 +3,22 @@ description: Create a GitHub PR from current branch with unpushed commits — di
 argument-hint: [base-branch] (default: main)
 ---
 
-# Create Pull Request
+# 创建 Pull Request
 
-> Adapted from PRPs-agentic-eng by Wirasm. Part of the PRP workflow series.
+> 改编自 PRPs-agentic-eng by Wirasm。属于 PRP 工作流程系列。
 
-**Input**: `$ARGUMENTS` — optional, may contain a base branch name and/or flags (e.g., `--draft`).
+**输入**：`$ARGUMENTS` — 可选，可能包含基础分支名称和/或标志（如 `--draft`）。
 
-**Parse `$ARGUMENTS`**:
-- Extract any recognized flags (`--draft`)
-- Treat remaining non-flag text as the base branch name
-- Default base branch to `main` if none specified
+**解析 `$ARGUMENTS`**：
+- 提取任何已识别的标志（`--draft`）
+- 将剩余的非标志文本作为基础分支名称
+- 如果未指定，默认基础分支为 `main`
 
 ---
 
-## Phase 1 — VALIDATE
+## 第一阶段 — 验证
 
-Check preconditions:
+检查前置条件：
 
 ```bash
 git branch --show-current
@@ -26,124 +26,124 @@ git status --short
 git log origin/<base>..HEAD --oneline
 ```
 
-| Check | Condition | Action if Failed |
+| 检查 | 条件 | 失败时操作 |
 |---|---|---|
-| Not on base branch | Current branch ≠ base | Stop: "Switch to a feature branch first." |
-| Clean working directory | No uncommitted changes | Warn: "You have uncommitted changes. Commit or stash first. Use `/prp-commit` to commit." |
-| Has commits ahead | `git log origin/<base>..HEAD` not empty | Stop: "No commits ahead of `<base>`. Nothing to PR." |
-| No existing PR | `gh pr list --head <branch> --json number` is empty | Stop: "PR already exists: #<number>. Use `gh pr view <number> --web` to open it." |
+| 不在基础分支上 | 当前分支 ≠ 基础分支 | 停止：「请先切换到功能分支。」 |
+| 工作区干净 | 没有未提交的变更 | 警告：「您有未提交的变更。请先提交或暂存。使用 `/prp-commit` 提交。」 |
+| 有领先提交 | `git log origin/<base>..HEAD` 非空 | 停止：「相对于 `<base>` 没有领先提交。没有什么可以 PR 的。」 |
+| 没有已存在的 PR | `gh pr list --head <branch> --json number` 为空 | 停止：「PR 已存在：#<number>。使用 `gh pr view <number> --web` 打开它。」 |
 
-If all checks pass, proceed.
+如果所有检查通过，继续。
 
 ---
 
-## Phase 2 — DISCOVER
+## 第二阶段 — 发现
 
-### PR Template
+### PR 模板
 
-Search for PR template in order:
+按顺序搜索 PR 模板：
 
-1. `.github/PULL_REQUEST_TEMPLATE/` directory — if exists, list files and let user choose (or use `default.md`)
+1. `.github/PULL_REQUEST_TEMPLATE/` 目录 — 如果存在，列出文件并让用户选择（或使用 `default.md`）
 2. `.github/PULL_REQUEST_TEMPLATE.md`
 3. `.github/pull_request_template.md`
 4. `docs/pull_request_template.md`
 
-If found, read it and use its structure for the PR body.
+如果找到，读取并使用其结构作为 PR 正文。
 
-### Commit Analysis
+### 提交分析
 
 ```bash
 git log origin/<base>..HEAD --format="%h %s" --reverse
 ```
 
-Analyze commits to determine:
-- **PR title**: Use conventional commit format with type prefix — `feat: ...`, `fix: ...`, etc.
-  - If multiple types, use the dominant one
-  - If single commit, use its message as-is
-- **Change summary**: Group commits by type/area
+分析提交以确定：
+- **PR 标题**：使用带有类型前缀的常规提交格式 — `feat: ...`、`fix: ...` 等
+  - 如果有多种类型，使用主要的类型
+  - 如果是单个提交，直接使用其消息
+- **变更摘要**：按类型/区域对提交分组
 
-### File Analysis
+### 文件分析
 
 ```bash
 git diff origin/<base>..HEAD --stat
 git diff origin/<base>..HEAD --name-only
 ```
 
-Categorize changed files: source, tests, docs, config, migrations.
+对变更文件进行分类：源代码、测试、文档、配置、迁移。
 
-### PRP Artifacts
+### PRP 产物
 
-Check for related PRP artifacts:
-- `.claude/PRPs/reports/` — Implementation reports
-- `.claude/PRPs/plans/` — Plans that were executed
-- `.claude/PRPs/prds/` — Related PRDs
+检查相关 PRP 产物：
+- `.claude/PRPs/reports/` — 实施报告
+- `.claude/PRPs/plans/` — 已执行的计划
+- `.claude/PRPs/prds/` — 相关的 PRD
 
-Reference these in the PR body if they exist.
+如果存在，在 PR 正文中引用这些。
 
 ---
 
-## Phase 3 — PUSH
+## 第三阶段 — 推送
 
 ```bash
 git push -u origin HEAD
 ```
 
-If push fails due to divergence:
+如果由于分叉导致推送失败：
 ```bash
 git fetch origin
 git rebase origin/<base>
 git push -u origin HEAD
 ```
 
-If rebase conflicts occur, stop and inform the user.
+如果 rebase 发生冲突，停止并通知用户。
 
 ---
 
-## Phase 4 — CREATE
+## 第四阶段 — 创建
 
-### With Template
+### 有模板
 
-If a PR template was found in Phase 2, fill in each section using the commit and file analysis. Preserve all template sections — leave sections as "N/A" if not applicable rather than removing them.
+如果在第二阶段找到了 PR 模板，使用提交和文件分析填充每个部分。保留所有模板部分 — 如果不适用，将部分保留为「N/A」而不是删除。
 
-### Without Template
+### 无模板
 
-Use this default format:
+使用此默认格式：
 
 ```markdown
-## Summary
+## 摘要
 
-<1-2 sentence description of what this PR does and why>
+<1-2 句描述此 PR 做什么以及为什么>
 
-## Changes
+## 变更
 
-<bulleted list of changes grouped by area>
+<按区域分组的变更项目符号列表>
 
-## Files Changed
+## 变更的文件
 
-<table or list of changed files with change type: Added/Modified/Deleted>
+<变更文件列表或表格，带变更类型：已添加/已修改/已删除>
 
-## Testing
+## 测试
 
-<description of how changes were tested, or "Needs testing">
+<描述如何测试变更，或「需要测试」>
 
-## Related Issues
+## 相关问题
 
-<linked issues with Closes/Fixes/Relates to #N, or "None">
+<链接的问题，带 Closes/Fixes/Relates to #N，或「无」>
 ```
 
-### Create the PR
+### 创建 PR
 
 ```bash
 gh pr create \
-  --title "<PR title>" \
-  --base <base-branch> \
-  --body "<PR body>"
-  # Add --draft if the --draft flag was parsed from $ARGUMENTS
+  --title "<PR 标题>" \
+  --base <基础分支> \
+  --body "<PR 正文>"
+  # 如果从 $ARGUMENTS 解析到了 --draft 标志，则添加 --draft
 ```
 
 ---
 
-## Phase 5 — VERIFY
+## 第五阶段 — 验证
 
 ```bash
 gh pr view --json number,url,title,state,baseRefName,headRefName,additions,deletions,changedFiles
@@ -152,33 +152,33 @@ gh pr checks --json name,status,conclusion 2>/dev/null || true
 
 ---
 
-## Phase 6 — OUTPUT
+## 第六阶段 — 输出
 
-Report to user:
+向用户报告：
 
 ```
-PR #<number>: <title>
-URL: <url>
-Branch: <head> → <base>
-Changes: +<additions> -<deletions> across <changedFiles> files
+PR #<number>：<标题>
+URL：<url>
+分支：<head> → <base>
+变更：<changedFiles> 个文件中 +<additions> -<deletions>
 
-CI Checks: <status summary or "pending" or "none configured">
+CI 检查：<状态摘要或「待定」或「未配置」>
 
-Artifacts referenced:
-  - <any PRP reports/plans linked in PR body>
+引用的产物：
+  - <PR 正文中链接的任何 PRP 报告/计划>
 
-Next steps:
-  - gh pr view <number> --web   → open in browser
-  - /code-review <number>       → review the PR
-  - gh pr merge <number>        → merge when ready
+后续步骤：
+  - gh pr view <number> --web   → 在浏览器中打开
+  - /code-review <number>       → 审查 PR
+  - gh pr merge <number>        → 准备好时合并
 ```
 
 ---
 
-## Edge Cases
+## 边缘情况
 
-- **No `gh` CLI**: Stop with: "GitHub CLI (`gh`) is required. Install: <https://cli.github.com/>"
-- **Not authenticated**: Stop with: "Run `gh auth login` first."
-- **Force push needed**: If remote has diverged and rebase was done, use `git push --force-with-lease` (never `--force`).
-- **Multiple PR templates**: If `.github/PULL_REQUEST_TEMPLATE/` has multiple files, list them and ask user to choose.
-- **Large PR (>20 files)**: Warn about PR size. Suggest splitting if changes are logically separable.
+- **没有 `gh` CLI**：停止并说明：「需要 GitHub CLI（`gh`）。安装：https://cli.github.com/」
+- **未认证**：停止并说明：「请先运行 `gh auth login`。」
+- **需要强制推送**：如果远程已分叉且已执行 rebase，使用 `git push --force-with-lease`（切勿使用 `--force`）。
+- **多个 PR 模板**：如果 `.github/PULL_REQUEST_TEMPLATE/` 有多个文件，列出它们并让用户选择。
+- **大型 PR（>20 个文件）**：警告 PR 大小。如果变更在逻辑上可分离，建议拆分。

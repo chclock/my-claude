@@ -1,26 +1,26 @@
-# Model Route Command
+# 模型路由命令
 
-Recommend the best model tier for the current task by complexity and budget.
+根据复杂度和预算为当前任务推荐最佳模型层级。
 
-## Usage
+## 用法
 
 `/model-route [task-description] [--budget low|med|high]`
 
-## Routing Heuristic
+## 路由启发式
 
-- `haiku`: deterministic, low-risk mechanical changes
-- `sonnet`: default for implementation and refactors
-- `opus`: architecture, deep review, ambiguous requirements
+- `haiku`：确定性、低风险的机械变更
+- `sonnet`：实现和重构的默认选择
+- `opus`：架构、深度审查、模糊需求
 
-## Required Output
+## 必需输出
 
-- recommended model
-- confidence level
-- why this model fits
-- fallback model if first attempt fails
+- 推荐的模型
+- 置信度级别
+- 为什么该模型适合
+- 首次尝试失败时的备选模型
 
-## Arguments
+## 参数
 
-$ARGUMENTS:
-- `[task-description]` optional free-text
-- `--budget low|med|high` optional
+$ARGUMENTS：
+- `[task-description]` 可选自由文本
+- `--budget low|med|high` 可选

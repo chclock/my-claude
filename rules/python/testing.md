@@ -3,23 +3,23 @@ paths:
   - "**/*.py"
   - "**/*.pyi"
 ---
-# Python Testing
+# Python 测试
 
-> This file extends [common/testing.md](../common/testing.md) with Python specific content.
+> 本文件通过 Python 特定内容扩展了 [common/testing.md](../common/testing.md)。
 
-## Framework
+## 框架
 
-Use **pytest** as the testing framework.
+使用 **pytest** 作为测试框架。
 
-## Coverage
+## 覆盖率
 
 ```bash
 pytest --cov=src --cov-report=term-missing
 ```
 
-## Test Organization
+## 测试组织
 
-Use `pytest.mark` for test categorization:
+使用 `pytest.mark` 进行测试分类：
 
 ```python
 import pytest
@@ -33,6 +33,6 @@ def test_database_connection():
     ...
 ```
 
-## Reference
+## 参考
 
-See skill: `python-testing` for detailed pytest patterns and fixtures.
+参见 skill：`python-testing`，获取详细的 pytest 模式和 fixtures。

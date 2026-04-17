@@ -4,22 +4,22 @@ paths:
   - "**/*.csx"
   - "**/*.csproj"
 ---
-# C# Testing
+# C# 测试
 
-> This file extends [common/testing.md](../common/testing.md) with C#-specific content.
+> 本文件通过 C# 特定内容扩展了 [common/testing.md](../common/testing.md)。
 
-## Test Framework
+## 测试框架
 
-- Prefer **xUnit** for unit and integration tests
-- Use **FluentAssertions** for readable assertions
-- Use **Moq** or **NSubstitute** for mocking dependencies
-- Use **Testcontainers** when integration tests need real infrastructure
+- 单元和集成测试首选 **xUnit**
+- 使用 **FluentAssertions** 获得可读的断言
+- 使用 **Moq** 或 **NSubstitute** 来 mock 依赖
+- 集成测试需要真实基础设施时使用 **Testcontainers**
 
-## Test Organization
+## 测试组织
 
-- Mirror `src/` structure under `tests/`
-- Separate unit, integration, and end-to-end coverage clearly
-- Name tests by behavior, not implementation details
+- 在 `tests/` 下镜像 `src/` 结构
+- 清晰分离单元、集成和端到端覆盖
+- 按行为命名测试，而非按实现细节
 
 ```csharp
 public sealed class OrderServiceTests
@@ -34,13 +34,13 @@ public sealed class OrderServiceTests
 }
 ```
 
-## ASP.NET Core Integration Tests
+## ASP.NET Core 集成测试
 
-- Use `WebApplicationFactory<TEntryPoint>` for API integration coverage
-- Test auth, validation, and serialization through HTTP, not by bypassing middleware
+- 使用 `WebApplicationFactory<TEntryPoint>` 进行 API 集成覆盖
+- 通过 HTTP 测试认证、验证和序列化，而非绕过中间件
 
-## Coverage
+## 覆盖率
 
-- Target 80%+ line coverage
-- Focus coverage on domain logic, validation, auth, and failure paths
-- Run `dotnet test` in CI with coverage collection enabled where available
+- 目标 80%+ 行覆盖率
+- 专注于领域逻辑、验证、认证和失败路径
+- 在 CI 中运行 `dotnet test`，在可用时启用覆盖率收集

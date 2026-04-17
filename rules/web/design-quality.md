@@ -1,63 +1,63 @@
-> This file extends [common/patterns.md](../common/patterns.md) with web-specific design-quality guidance.
+> 本文件通过 Web 特定的设计质量指导扩展了 [common/patterns.md](../common/patterns.md)。
 
-# Web Design Quality Standards
+# Web 设计质量标准
 
-## Anti-Template Policy
+## 反模板政策
 
-Do not ship generic template-looking UI. Frontend output should look intentional, opinionated, and specific to the product.
+不要交付看起来像通用模板的 UI。前端输出应该看起来是有意的、有主见的且特定于产品的。
 
-### Banned Patterns
+### 禁止的模式
 
-- Default card grids with uniform spacing and no hierarchy
-- Stock hero section with centered headline, gradient blob, and generic CTA
-- Unmodified library defaults passed off as finished design
-- Flat layouts with no layering, depth, or motion
-- Uniform radius, spacing, and shadows across every component
-- Safe gray-on-white styling with one decorative accent color
-- Dashboard-by-numbers layouts with sidebar + cards + charts and no point of view
-- Default font stacks used without a deliberate reason
+- 具有均匀间距和无层次结构的默认卡片网格
+- 具有居中标题、渐变blob和通用 CTA 的库存 hero 区域
+- 伪装成完成设计的未修改库默认值
+- 无分层、深度或动画的平面布局
+- 每个组件的均匀半径、间距和阴影
+- 带一个装饰性强调色的安全灰白样式
+- 带侧边栏 + 卡片 + 图表而无观点的仪表板数字布局
+- 无正当理由使用的默认字体堆叠
 
-### Required Qualities
+### 必需的品质
 
-Every meaningful frontend surface should demonstrate at least four of these:
+每个有意义的前端界面应展示至少其中四项：
 
-1. Clear hierarchy through scale contrast
-2. Intentional rhythm in spacing, not uniform padding everywhere
-3. Depth or layering through overlap, shadows, surfaces, or motion
-4. Typography with character and a real pairing strategy
-5. Color used semantically, not just decoratively
-6. Hover, focus, and active states that feel designed
-7. Grid-breaking editorial or bento composition where appropriate
-8. Texture, grain, or atmosphere when it fits the visual direction
-9. Motion that clarifies flow instead of distracting from it
-10. Data visualization treated as part of the design system, not an afterthought
+1. 通过比例对比实现清晰的层次结构
+2. 有意的间距节奏，而非到处均匀填充
+3. 通过重叠、阴影、表面或动画实现深度或分层
+4. 有特色的排版和真正的配对策略
+5. 语义使用颜色，而非仅装饰性
+6. 感觉经过设计的悬停、焦点和活动状态
+7. 适当时使用打破网格的编辑或 bento 构图
+8. 适合视觉方向时使用纹理、颗粒或氛围
+9. 明确流程而非分散注意力的动画
+10. 将数据可视化视为设计系统的一部分，而非事后考虑
 
-## Before Writing Frontend Code
+## 编写前端代码之前
 
-1. Pick a specific style direction. Avoid vague defaults like "clean minimal".
-2. Define a palette intentionally.
-3. Choose typography deliberately.
-4. Gather at least a small set of real references.
-5. Use ECC design/frontend skills where relevant.
+1. 选择一个具体的风格方向。避免"简洁极简"等模糊默认值。
+2. 有意地定义调色板。
+3. 有意地选择排版。
+4. 收集至少一组真实的参考。
+5. 在相关时使用 ECC 设计/前端技能。
 
-## Worthwhile Style Directions
+## 值得追求的风格方向
 
-- Editorial / magazine
-- Neo-brutalism
-- Glassmorphism with real depth
-- Dark luxury or light luxury with disciplined contrast
-- Bento layouts
-- Scrollytelling
-- 3D integration
-- Swiss / International
-- Retro-futurism
+- 编辑/杂志
+- 新 brutalism
+- 具有真正深度的 glassmorphism
+- 有纪律对比的暗奢华或亮奢华
+- Bento 布局
+- 滚动叙事
+- 3D 集成
+- 瑞士/国际风格
+- 复古未来主义
 
-Do not default to dark mode automatically. Choose the visual direction the product actually wants.
+不要默认自动选择暗模式。选择产品实际需要的视觉方向。
 
-## Component Checklist
+## 组件检查清单
 
-- [ ] Does it avoid looking like a default Tailwind or shadcn template?
-- [ ] Does it have intentional hover/focus/active states?
-- [ ] Does it use hierarchy rather than uniform emphasis?
-- [ ] Would this look believable in a real product screenshot?
-- [ ] If it supports both themes, do both light and dark feel intentional?
+- [ ] 它是否避免了看起来像默认 Tailwind 或 shadcn 模板？
+- [ ] 它是否有有意的悬停/焦点/活动状态？
+- [ ] 它使用层次结构而非均匀强调吗？
+- [ ] 它在真实产品截图中看起来可信吗？
+- [ ] 如果支持两种主题，浅色和深色都感觉是有意的吗？

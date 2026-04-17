@@ -1,64 +1,65 @@
 ---
-description: Legacy slash-entry shim for dmux-workflows and autonomous-agent-harness. Prefer the skills directly.
+description: dmux-workflows 和 autonomous-agent-harness 的传统斜杠入口兼容层。推荐直接使用 skills。
 ---
 
-# Orchestrate Command (Legacy Shim)
+# Orchestrate 命令（传统兼容层）
 
-Use this only if you still invoke `/orchestrate`. The maintained orchestration guidance lives in `skills/dmux-workflows/SKILL.md` and `skills/autonomous-agent-harness/SKILL.md`.
+仅在仍在调用 `/orchestrate` 时使用此命令。主要的编排指南位于 `skills/dmux-workflows/SKILL.md` 和 `skills/autonomous-agent-harness/SKILL.md`。
 
-## Canonical Surface
+## 标准入口
 
-- Prefer `dmux-workflows` for parallel panes, worktrees, and multi-agent splits.
-- Prefer `autonomous-agent-harness` for longer-running loops, governance, scheduling, and control-plane style execution.
-- Keep this file only as a compatibility entry point.
+- 对于并行面板、工作树和多代理拆分，推荐使用 `dmux-workflows`。
+- 对于长时间运行的循环、治理、调度和控制平面风格的执行，推荐使用 `autonomous-agent-harness`。
+- 仅将此文件作为兼容性入口点保留。
 
-## Arguments
+## 参数
 
 `$ARGUMENTS`
 
-## Delegation
+## 委托
 
-Apply the orchestration skills instead of maintaining a second workflow spec here.
-- Start with `dmux-workflows` for split/parallel execution.
-- Pull in `autonomous-agent-harness` when the user is really asking for persistent loops, governance, or operator-layer behavior.
-- Keep handoffs structured, but let the skills define the maintained sequencing rules.
-Security Reviewer: [summary]
+请应用编排 skills，而不是在此维护第二个工作流程规范。
+- 对于拆分/并行执行，从 `dmux-workflows` 开始。
+- 当用户真正需要持久循环、治理或操作员层行为时，引入 `autonomous-agent-harness`。
+- 保持交接结构化，但让 skills 定义维护的排序规则。
 
-### FILES CHANGED
+安全审查者：[summary]
 
-[List all files modified]
+### 修改的文件
 
-### TEST RESULTS
+[列出所有修改的文件]
 
-[Test pass/fail summary]
+### 测试结果
 
-### SECURITY STATUS
+[测试通过/失败摘要]
 
-[Security findings]
+### 安全状态
 
-### RECOMMENDATION
+[安全发现]
 
-[SHIP / NEEDS WORK / BLOCKED]
+### 建议
+
+[发布 / 需要工作 / 阻塞]
 ```
 
-## Parallel Execution
+## 并行执行
 
-For independent checks, run agents in parallel:
+对于独立检查，并行运行代理：
 
 ```markdown
-### Parallel Phase
-Run simultaneously:
-- code-reviewer (quality)
-- security-reviewer (security)
-- architect (design)
+### 并行阶段
+同时运行：
+- code-reviewer（质量）
+- security-reviewer（安全）
+- architect（设计）
 
-### Merge Results
-Combine outputs into single report
+### 合并结果
+将输出合并为单一报告
 ```
 
-For external tmux-pane workers with separate git worktrees, use `node scripts/orchestrate-worktrees.js plan.json --execute`. The built-in orchestration pattern stays in-process; the helper is for long-running or cross-harness sessions.
+对于外部 tmux 面板工作进程和独立的 git 工作树，使用 `node scripts/orchestrate-worktrees.js plan.json --execute`。内置编排模式保持在进程内；辅助脚本用于长时间运行或跨 harness 的会话。
 
-When workers need to see dirty or untracked local files from the main checkout, add `seedPaths` to the plan file. ECC overlays only those selected paths into each worker worktree after `git worktree add`, which keeps the branch isolated while still exposing in-flight local scripts, plans, or docs.
+当工作进程需要查看主检出的脏文件或未跟踪的本地文件时，将 `seedPaths` 添加到计划文件中。ECC 在 `git worktree add` 之后仅将那些选定的路径覆盖到每个工作进程工作树中，这保持分支隔离同时仍暴露进行中的本地脚本、计划或文档。
 
 ```json
 {
@@ -74,62 +75,62 @@ When workers need to see dirty or untracked local files from the main checkout, 
 }
 ```
 
-To export a control-plane snapshot for a live tmux/worktree session, run:
+要导出现场 tmux/worktree 会话的控制平面快照，请运行：
 
 ```bash
 node scripts/orchestration-status.js .claude/plan/workflow-visual-proof.json
 ```
 
-The snapshot includes session activity, tmux pane metadata, worker states, objectives, seeded overlays, and recent handoff summaries in JSON form.
+快照包括会话活动、tmux 面板元数据、工作进程状态、目标、种子覆盖和最近的交接摘要（JSON 形式）。
 
-## Operator Command-Center Handoff
+## 操作员指挥中心交接
 
-When the workflow spans multiple sessions, worktrees, or tmux panes, append a control-plane block to the final handoff:
+当工作流程跨越多个会话、工作树或 tmux 面板时，将控制平面块附加到最终交接：
 
 ```markdown
-CONTROL PLANE
+控制平面
 -------------
-Sessions:
-- active session ID or alias
-- branch + worktree path for each active worker
-- tmux pane or detached session name when applicable
+会话：
+- 活动会话 ID 或别名
+- 每个活动工作进程的分支 + 工作树路径
+- 适用的 tmux 面板或分离会话名称
 
-Diffs:
-- git status summary
-- git diff --stat for touched files
-- merge/conflict risk notes
+差异：
+- git 状态摘要
+- 触摸文件的 git diff --stat
+- 合并/冲突风险说明
 
-Approvals:
-- pending user approvals
-- blocked steps awaiting confirmation
+批准：
+- 待处理的用户批准
+- 等待确认的阻塞步骤
 
-Telemetry:
-- last activity timestamp or idle signal
-- estimated token or cost drift
-- policy events raised by hooks or reviewers
+遥测：
+- 最后活动 timestamp 或空闲信号
+- 预计 token 或成本偏差
+- 钩子或审查者引发的策略事件
 ```
 
-This keeps planner, implementer, reviewer, and loop workers legible from the operator surface.
+这使 planner、implementer、reviewer 和循环工作进程从操作员界面保持可读。
 
-## Workflow Arguments
+## 工作流程参数
 
-$ARGUMENTS:
-- `feature <description>` - Full feature workflow
-- `bugfix <description>` - Bug fix workflow
-- `refactor <description>` - Refactoring workflow
-- `security <description>` - Security review workflow
-- `custom <agents> <description>` - Custom agent sequence
+$ARGUMENTS：
+- `feature <description>` - 完整功能工作流程
+- `bugfix <description>` - 缺陷修复工作流程
+- `refactor <description>` - 重构工作流程
+- `security <description>` - 安全审查工作流程
+- `custom <agents> <description>` - 自定义代理序列
 
-## Custom Workflow Example
+## 自定义工作流程示例
 
 ```
 /orchestrate custom "architect,tdd-guide,code-reviewer" "Redesign caching layer"
 ```
 
-## Tips
+## 提示
 
-1. **Start with planner** for complex features
-2. **Always include code-reviewer** before merge
-3. **Use security-reviewer** for auth/payment/PII
-4. **Keep handoffs concise** - focus on what next agent needs
-5. **Run verification** between agents if needed
+1. **对于复杂功能，先从 planner 开始**
+2. **合并前始终包含 code-reviewer**
+3. **对于认证/支付/PII 使用 security-reviewer**
+4. **保持交接简洁** - 专注于下一个代理需要什么
+5. **如需要，在代理之间运行验证**

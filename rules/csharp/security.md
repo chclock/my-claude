@@ -5,54 +5,54 @@ paths:
   - "**/*.csproj"
   - "**/appsettings*.json"
 ---
-# C# Security
+# C# 安全
 
-> This file extends [common/security.md](../common/security.md) with C#-specific content.
+> 本文件通过 C# 特定内容扩展了 [common/security.md](../common/security.md)。
 
-## Secret Management
+## 密钥管理
 
-- Never hardcode API keys, tokens, or connection strings in source code
-- Use environment variables, user secrets for local development, and a secret manager in production
-- Keep `appsettings.*.json` free of real credentials
+- 绝不将 API 密钥、令牌或连接字符串硬编码到源代码中
+- 使用环境变量、用户密钥进行本地开发，生产环境使用密钥管理器
+- 保持 `appsettings.*.json` 不含真实凭证
 
 ```csharp
-// BAD
+// 错误
 const string ApiKey = "sk-live-123";
 
-// GOOD
+// 正确
 var apiKey = builder.Configuration["OpenAI:ApiKey"]
     ?? throw new InvalidOperationException("OpenAI:ApiKey is not configured.");
 ```
 
-## SQL Injection Prevention
+## SQL 注入防护
 
-- Always use parameterized queries with ADO.NET, Dapper, or EF Core
-- Never concatenate user input into SQL strings
-- Validate sort fields and filter operators before using dynamic query composition
+- 始终使用 ADO.NET、Dapper 或 EF Core 的参数化查询
+- 绝不将用户输入拼接到 SQL 字符串中
+- 在使用动态查询组合前验证排序字段和过滤操作符
 
 ```csharp
 const string sql = "SELECT * FROM Orders WHERE CustomerId = @customerId";
 await connection.QueryAsync<Order>(sql, new { customerId });
 ```
 
-## Input Validation
+## 输入验证
 
-- Validate DTOs at the application boundary
-- Use data annotations, FluentValidation, or explicit guard clauses
-- Reject invalid model state before running business logic
+- 在应用边界验证 DTO
+- 使用数据注解、FluentValidation 或显式 guard 子句
+- 在运行业务逻辑前拒绝无效的模型状态
 
-## Authentication and Authorization
+## 认证和授权
 
-- Prefer framework auth handlers instead of custom token parsing
-- Enforce authorization policies at endpoint or handler boundaries
-- Never log raw tokens, passwords, or PII
+- 首选框架认证处理器而非自定义令牌解析
+- 在端点或处理器边界强制执行授权策略
+- 绝不记录原始令牌、密码或 PII
 
-## Error Handling
+## 错误处理
 
-- Return safe client-facing messages
-- Log detailed exceptions with structured context server-side
-- Do not expose stack traces, SQL text, or filesystem paths in API responses
+- 返回安全的面向客户端的消息
+- 记录服务器端详细异常及结构化上下文
+- 不要在 API 响应中暴露堆栈跟踪、SQL 文本或文件系统路径
 
-## References
+## 参考
 
-See skill: `security-review` for broader application security review checklists.
+有关更广泛的应用安全审查检查清单，请参阅 skill：`security-review`。

@@ -1,152 +1,152 @@
 ---
 name: seo
-description: Audit, plan, and implement SEO improvements across technical SEO, on-page optimization, structured data, Core Web Vitals, and content strategy. Use when the user wants better search visibility, SEO remediation, schema markup, sitemap/robots work, or keyword mapping.
+description: 审核、规划和实施 SEO 改进，涵盖技术 SEO、页面优化、结构化数据、Core Web Vitals 和内容策略。当用户想要更好的搜索可见性、SEO 修复、schema 标记、sitemap/robots 工作或关键词映射时使用。
 origin: ECC
 ---
 
 # SEO
 
-Improve search visibility through technical correctness, performance, and content relevance, not gimmicks.
+通过技术正确性、性能和内容相关性提高搜索可见性，而非花招。
 
-## When to Use
+## 何时使用
 
-Use this skill when:
-- auditing crawlability, indexability, canonicals, or redirects
-- improving title tags, meta descriptions, and heading structure
-- adding or validating structured data
-- improving Core Web Vitals
-- doing keyword research and mapping keywords to URLs
-- planning internal linking or sitemap / robots changes
+在以下情况下使用此技能：
+- 审核抓取能力、索引能力、规范链接或重定向
+- 改进标题标签、元描述和标题结构
+- 添加或验证结构化数据
+- 改进 Core Web Vitals
+- 进行关键词研究和将关键词映射到 URL
+- 规划内部链接或 sitemap / robots 变更
 
-## How It Works
+## 工作原理
 
-### Principles
+### 原则
 
-1. Fix technical blockers before content optimization.
-2. One page should have one clear primary search intent.
-3. Prefer long-term quality signals over manipulative patterns.
-4. Mobile-first assumptions matter because indexing is mobile-first.
-5. Recommendations should be page-specific and implementable.
+1. 在内容优化之前先修复技术障碍。
+2. 一个页面应该有一个清晰的主要搜索意图。
+3. 首选长期质量信号而非操控性模式。
+4. 移动优先假设很重要，因为索引是移动优先的。
+5. 建议应该是页面特定的且可实施的。
 
-### Technical SEO checklist
+### 技术 SEO 检查清单
 
-#### Crawlability
+#### 抓取能力
 
-- `robots.txt` should allow important pages and block low-value surfaces
-- no important page should be unintentionally `noindex`
-- important pages should be reachable within a shallow click depth
-- avoid redirect chains longer than two hops
-- canonical tags should be self-consistent and non-looping
+- `robots.txt` 应该允许重要页面并阻止低价值页面
+- 不应有重要页面被意外设置为 `noindex`
+- 重要页面应该在浅层点击深度内可达
+- 避免超过两跳的重定向链
+- 规范标签应该是自洽的且不循环的
 
-#### Indexability
+#### 索引能力
 
-- preferred URL format should be consistent
-- multilingual pages need correct hreflang if used
-- sitemaps should reflect the intended public surface
-- no duplicate URLs should compete without canonical control
+- 首选的 URL 格式应该一致
+- 多语言页面需要正确的 hreflang（如果使用）
+- sitemap 应该反映预期的公开页面
+- 不应有重复 URL 在没有规范控制的情况下竞争
 
-#### Performance
+#### 性能
 
 - LCP < 2.5s
 - INP < 200ms
 - CLS < 0.1
-- common fixes: preload hero assets, reduce render-blocking work, reserve layout space, trim heavy JS
+- 常见修复：预加载主要资源、减少渲染阻塞工作、保留布局空间、削减重型 JS
 
-#### Structured data
+#### 结构化数据
 
-- homepage: organization or business schema where appropriate
-- editorial pages: `Article` / `BlogPosting`
-- product pages: `Product` and `Offer`
-- interior pages: `BreadcrumbList`
-- Q&A sections: `FAQPage` only when the content truly matches
+- 主页：适当的 organization 或 business schema
+- 编辑页面：`Article` / `BlogPosting`
+- 产品页面：`Product` 和 `Offer`
+- 内部页面：`BreadcrumbList`
+- Q&A 部分：仅在内容真正匹配时使用 `FAQPage`
 
-### On-page rules
+### 页面规则
 
-#### Title tags
+#### 标题标签
 
-- aim for roughly 50-60 characters
-- put the primary keyword or concept near the front
-- make the title legible to humans, not stuffed for bots
+- 目标大约 50-60 个字符
+- 将主要关键词或概念放在前面
+- 使标题对人类可读，而不是为机器人堆砌
 
-#### Meta descriptions
+#### 元描述
 
-- aim for roughly 120-160 characters
-- describe the page honestly
-- include the main topic naturally
+- 目标大约 120-160 个字符
+- 诚实描述页面
+- 自然地包含主题
 
-#### Heading structure
+#### 标题结构
 
-- one clear `H1`
-- `H2` and `H3` should reflect actual content hierarchy
-- do not skip structure just for visual styling
+- 一个清晰的 `H1`
+- `H2` 和 `H3` 应该反映实际内容层次
+- 不要为了视觉样式而跳过结构
 
-### Keyword mapping
+### 关键词映射
 
-1. define the search intent
-2. gather realistic keyword variants
-3. prioritize by intent match, likely value, and competition
-4. map one primary keyword/theme to one URL
-5. detect and avoid cannibalization
+1. 定义搜索意图
+2. 收集现实的关键词变体
+3. 按意图匹配、可能价值和竞争程度优先排序
+4. 将一个主要关键词/主题映射到一个 URL
+5. 检测并避免内容蚕食
 
-### Internal linking
+### 内部链接
 
-- link from strong pages to pages you want to rank
-- use descriptive anchor text
-- avoid generic anchors when a more specific one is possible
-- backfill links from new pages to relevant existing ones
+- 从强页面链接到你想要排名的页面
+- 使用描述性锚文本
+- 当可能使用更具体的锚文本时避免通用锚文本
+- 从新页面回填到相关现有页面的链接
 
-## Examples
+## 示例
 
-### Title formula
-
-```text
-Primary Topic - Specific Modifier | Brand
-```
-
-### Meta description formula
+### 标题公式
 
 ```text
-Action + topic + value proposition + one supporting detail
+主要主题 - 具体修饰词 | 品牌
 ```
 
-### JSON-LD example
+### 元描述公式
+
+```text
+行动 + 主题 + 价值主张 + 一个支持细节
+```
+
+### JSON-LD 示例
 
 ```json
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Page Title Here",
+  "headline": "页面标题",
   "author": {
     "@type": "Person",
-    "name": "Author Name"
+    "name": "作者姓名"
   },
   "publisher": {
     "@type": "Organization",
-    "name": "Brand Name"
+    "name": "品牌名称"
   }
 }
 ```
 
-### Audit output shape
+### 审核输出格式
 
 ```text
-[HIGH] Duplicate title tags on product pages
-Location: src/routes/products/[slug].tsx
-Issue: Dynamic titles collapse to the same default string, which weakens relevance and creates duplicate signals.
-Fix: Generate a unique title per product using the product name and primary category.
+[高] 产品页面标题标签重复
+位置：src/routes/products/[slug].tsx
+问题：动态标题塌陷到相同的默认字符串，这削弱了相关性并制造了重复信号。
+修复：使用产品名称和主要类别为每个产品生成唯一标题。
 ```
 
-## Anti-Patterns
+## 反模式
 
-| Anti-pattern | Fix |
+| 反模式 | 修复 |
 | --- | --- |
-| keyword stuffing | write for users first |
-| thin near-duplicate pages | consolidate or differentiate them |
-| schema for content that is not actually present | match schema to reality |
-| content advice without checking the actual page | read the real page first |
-| generic “improve SEO” outputs | tie every recommendation to a page or asset |
+| 关键词堆砌 | 首先为用户写作 |
+| 薄重复页面 | 合并或区分它们 |
+| 为不实际存在的内容添加 schema | 让 schema 匹配现实 |
+| 没有检查实际页面就给内容建议 | 先阅读真实页面 |
+| 泛泛的"改进 SEO"输出 | 将每个建议绑定到页面或资源 |
 
-## Related Skills
+## 相关技能
 
 - `seo-specialist`
 - `frontend-patterns`
