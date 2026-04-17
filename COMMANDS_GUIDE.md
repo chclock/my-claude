@@ -364,6 +364,62 @@ skills/
 
 ---
 
+## 6. Agent 智能体详解
+
+### 6.1 Agent 目录
+
+```
+agents/
+├── architect.md           # 架构专家
+├── planner.md             # 规划专家
+├── tdd-guide.md           # TDD 指南
+├── python-reviewer.md     # Python 审查
+├── csharp-reviewer.md     # C# 审查
+├── rust-reviewer.md       # Rust 审查
+├── security-reviewer.md   # 安全审查
+├── code-reviewer.md       # 通用代码审查
+├── build-error-resolver.md # 构建错误解决
+├── pr-test-analyzer.md    # PR 测试分析
+├── doc-updater.md         # 文档更新
+├── e2e-runner.md          # E2E 测试运行
+├── refactor-cleaner.md    # 重构清理
+└── chief-of-staff.md      # 首席运营官
+```
+
+### 6.2 Agent 触发条件
+
+| Agent | 触发条件 | 使用场景 |
+|-------|----------|----------|
+| `architect` | 系统设计、架构决策时 | 复杂系统设计、技术选型 |
+| `planner` | `/plan` 命令调用时 | 实施规划、需求分解 |
+| `tdd-guide` | `/tdd` 或 TDD 开发时 | 测试驱动开发指导 |
+| `python-reviewer` | Python 代码审查时 | FastAPI/Django/Flask |
+| `csharp-reviewer` | C# 代码审查时 | .NET/C# 项目 |
+| `rust-reviewer` | Rust 代码审查时 | 所有权、安全、生命周期 |
+| `security-reviewer` | 安全敏感代码、安全审计时 | OWASP Top 10、漏洞检测 |
+| `code-reviewer` | 通用代码审查 | `/code-review` 命令 |
+| `build-error-resolver` | 构建失败时 | 编译错误解决 |
+| `pr-test-analyzer` | PR 审查时 | 测试分析、覆盖率 |
+| `doc-updater` | 文档/代码地图更新时 | `/update-codemaps`、`/update-docs` |
+| `e2e-runner` | E2E 测试执行时 | 端到端测试 |
+| `refactor-cleaner` | 死代码清理时 | `/refactor-clean` |
+| `chief-of-staff` | 项目管理、编排时 | 复杂工作流协调 |
+
+### 6.3 Agent 与命令的关系
+
+| 命令 | 调用的 Agent |
+|------|-------------|
+| `/plan` | `planner` |
+| `/review-pr` | `code-reviewer`, `pr-test-analyzer`, `security-reviewer` 等多个 |
+| `/code-review` | `code-reviewer` + 语言特定审查者 |
+| `/refactor-clean` | `refactor-cleaner` |
+| `/update-codemaps` | `doc-updater` |
+| `/update-docs` | `doc-updater` |
+| `/build-fix` | `build-error-resolver` |
+| `/tdd` | `tdd-guide` |
+
+---
+
 ## 附录：文件位置
 
 - **Commands**: `commands/*.md`
@@ -374,3 +430,11 @@ skills/
 ---
 
 _最后更新：2026/04/17_
+
+---
+
+## 更新日志
+
+### 2026/04/17
+- 补充 agents/ 目录 5 个未记录的 Agent（doc-updater、e2e-runner、refactor-cleaner、rust-reviewer、security-reviewer）
+- 添加 Agent 触发条件和与命令的对应关系
