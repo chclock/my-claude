@@ -368,42 +368,122 @@ skills/
 
 ### 6.1 Agent 目录
 
-```
-agents/
-├── architect.md           # 架构专家
-├── planner.md             # 规划专家
-├── tdd-guide.md           # TDD 指南
-├── python-reviewer.md     # Python 审查
-├── csharp-reviewer.md     # C# 审查
-├── rust-reviewer.md       # Rust 审查
-├── security-reviewer.md   # 安全审查
-├── code-reviewer.md       # 通用代码审查
-├── build-error-resolver.md # 构建错误解决
-├── pr-test-analyzer.md    # PR 测试分析
-├── doc-updater.md         # 文档更新
-├── e2e-runner.md          # E2E 测试运行
-├── refactor-cleaner.md    # 重构清理
-└── chief-of-staff.md      # 首席运营官
-```
+| 文件 | 名称 | 核心职责 |
+|------|------|----------|
+| `architect.md` | 架构专家 | 系统架构设计、技术选型、架构评审 |
+| `planner.md` | 规划专家 | 功能规划、需求分解、实施步骤 |
+| `tdd-guide.md` | TDD 指南 | 测试驱动开发、红绿重构循环 |
+| `python-reviewer.md` | Python 审查 | PEP 8 合规、类型提示、Pythonic 模式 |
+| `csharp-reviewer.md` | C# 审查 | .NET 约定、异步模式、可空引用类型 |
+| `rust-reviewer.md` | Rust 审查 | 所有权、生命周期、错误处理、不安全代码 |
+| `security-reviewer.md` | 安全审查 | OWASP Top 10、漏洞检测、密钥检测 |
+| `code-reviewer.md` | 通用代码审查 | 代码质量、安全、可维护性 |
+| `build-error-resolver.md` | 构建错误解决 | TypeScript/编译错误、依赖问题 |
+| `pr-test-analyzer.md` | PR 测试分析 | 测试覆盖率、行为覆盖、缺口分析 |
+| `doc-updater.md` | 文档更新 | 代码地图生成、文档同步 |
+| `e2e-runner.md` | E2E 测试运行 | Playwright/Agent Browser 端到端测试 |
+| `refactor-cleaner.md` | 重构清理 | 死代码检测、重复消除、安全删除 |
+| `chief-of-staff.md` | 首席运营官 | 邮件/Slack/LINE 消息分类、回复草稿 |
 
-### 6.2 Agent 触发条件
+### 6.2 Agent 核心职责详解
 
-| Agent | 触发条件 | 使用场景 |
-|-------|----------|----------|
-| `architect` | 系统设计、架构决策时 | 复杂系统设计、技术选型 |
-| `planner` | `/plan` 命令调用时 | 实施规划、需求分解 |
-| `tdd-guide` | `/tdd` 或 TDD 开发时 | 测试驱动开发指导 |
-| `python-reviewer` | Python 代码审查时 | FastAPI/Django/Flask |
-| `csharp-reviewer` | C# 代码审查时 | .NET/C# 项目 |
-| `rust-reviewer` | Rust 代码审查时 | 所有权、安全、生命周期 |
-| `security-reviewer` | 安全敏感代码、安全审计时 | OWASP Top 10、漏洞检测 |
-| `code-reviewer` | 通用代码审查 | `/code-review` 命令 |
-| `build-error-resolver` | 构建失败时 | 编译错误解决 |
-| `pr-test-analyzer` | PR 审查时 | 测试分析、覆盖率 |
-| `doc-updater` | 文档/代码地图更新时 | `/update-codemaps`、`/update-docs` |
-| `e2e-runner` | E2E 测试执行时 | 端到端测试 |
-| `refactor-cleaner` | 死代码清理时 | `/refactor-clean` |
-| `chief-of-staff` | 项目管理、编排时 | 复杂工作流协调 |
+#### architect — 架构专家
+
+- **职责**：系统架构设计、技术选型、架构评审
+- **触发**：新功能设计、系统重构、技术决策
+- **流程**：当前状态分析 → 需求收集 → 设计方案 → 权衡分析
+- **输出**：架构图、ADR（架构决策记录）、系统设计检查清单
+
+#### planner — 规划专家
+
+- **职责**：功能规划、需求分解、实施步骤
+- **触发**：`/plan` 命令调用
+- **流程**：需求分析 → 架构评审 → 步骤分解 → 实施顺序
+- **输出**：分阶段实施计划（含文件路径、依赖、风险）
+
+#### tdd-guide — TDD 指南
+
+- **职责**：测试驱动开发、覆盖率达标
+- **触发**：`/tdd`、测试先行需求
+- **流程**：红色（写测试）→ 绿色（写实现）→ 重构
+- **要求**：分支/函数/行/语句覆盖率 80%+
+
+#### python-reviewer — Python 审查
+
+- **职责**：PEP 8 合规、类型提示、Pythonic 模式
+- **触发**：Python 项目代码审查
+- **检查**：SQL 注入、命令注入、裸 except、可变默认参数
+- **工具**：mypy、ruff、black、bandit
+
+#### csharp-reviewer — C# 审查
+
+- **职责**：.NET 约定、异步模式、可空引用类型
+- **触发**：C# 项目代码审查
+- **检查**：SQL 注入、ConfigureAwait、CancellationToken、`dynamic` 滥用
+- **工具**：dotnet build、dotnet format
+
+#### rust-reviewer — Rust 审查
+
+- **职责**：所有权、生命周期、错误处理、不安全代码
+- **触发**：Rust 项目代码审查
+- **检查**：unwrap/expect、Unsafe 代码安全、生命周期过度标注
+- **工具**：cargo clippy、cargo fmt、cargo audit
+
+#### security-reviewer — 安全审查
+
+- **职责**：OWASP Top 10、漏洞检测、密钥检测
+- **触发**：安全敏感代码、API 端点、认证代码
+- **检查**：注入、认证破坏、敏感数据、XSS、CSRF、配置错误
+- **原则**：深度防御、最小权限、Fail 安全、不信任输入
+
+#### code-reviewer — 通用代码审查
+
+- **职责**：代码质量、安全、可维护性
+- **触发**：`/code-review` 命令
+- **检查**：大函数/文件、深嵌套、缺失错误处理、安全漏洞
+- **流程**：收集上下文 → 理解范围 → 读取周围代码 → 应用检查清单
+
+#### build-error-resolver — 构建错误解决
+
+- **职责**：TypeScript/编译错误、依赖问题
+- **触发**：构建失败、类型错误
+- **原则**：最小改动、不改变架构、只修复错误
+- **不做**：不重构、不改进、不重命名变量
+
+#### pr-test-analyzer — PR 测试分析
+
+- **职责**：测试覆盖率、行为覆盖、缺口分析
+- **触发**：PR 审查时
+- **检查**：功能覆盖、边界情况、错误路径、集成覆盖
+- **输出**：覆盖摘要、严重缺口、改进建议
+
+#### doc-updater — 文档更新
+
+- **职责**：代码地图生成、文档同步
+- **触发**：`/update-codemaps`、`/update-docs`
+- **流程**：分析仓库 → 分析模块 → 生成代码地图 → 更新文档
+- **原则**：单一真相来源、新鲜度时间戳、可操作性
+
+#### e2e-runner — E2E 测试运行
+
+- **职责**：Playwright/Agent Browser 端到端测试
+- **触发**：E2E 测试执行
+- **工具**：Agent Browser（首选）、Playwright（备选）
+- **原则**：语义定位器、等待条件而非时间、隔离测试
+
+#### refactor-cleaner — 重构清理
+
+- **职责**：死代码检测、重复消除、安全删除
+- **触发**：`/refactor-clean`
+- **工具**：knip、depcheck、ts-prune
+- **原则**：从小开始、经常测试、保守行事
+
+#### chief-of-staff — 首席运营官
+
+- **职责**：多渠道消息分类、回复草稿、日程管理
+- **触发**：沟通管理任务
+- **分类**：skip → info_only → meeting_info → action_required
+- **渠道**：Gmail、Slack、LINE、Messenger、日历
 
 ### 6.3 Agent 与命令的关系
 
@@ -429,11 +509,14 @@ agents/
 
 ---
 
-_最后更新：2026/04/17_
+_最后更新：2026/04/20_
 
 ---
 
 ## 更新日志
+
+### 2026/04/20
+- 补充各 Agent 核心职责详解（职责、触发条件、检查项/工具/流程、原则）
 
 ### 2026/04/17
 - 补充 agents/ 目录 5 个未记录的 Agent（doc-updater、e2e-runner、refactor-cleaner、rust-reviewer、security-reviewer）
